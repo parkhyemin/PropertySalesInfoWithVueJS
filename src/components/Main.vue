@@ -2,10 +2,13 @@
 <div>
   <h2 v-if="resultCode != '00' ">{{resultCode}}</h2>
   <h2 v-if="resultCode != '00' ">{{resultMsg}}</h2>
-  <h2>총 카운트 : {{totalCount}}</h2>
-  <ul v-if="resultCode == '00' ">
-    <li v-for="item in data">{{item}}</li>
-  </ul>
+  <h2>총 카운트 <b-badge>{{totalCount}}</b-badge></h2>
+  <b-btn @click="showAlert" variant="info" class="m-1">
+      Show alert with count-down timer
+    </b-btn>
+  <b-list-group v-if="resultCode == '00' ">
+    <b-list-group-item v-for="item in data">{{item}}</b-list-group-item>
+  </b-list-group>
 </div>
 </template>
 
@@ -49,18 +52,4 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-h1, h2 {
-  font-weight: normal;
-}
-ul {
-  list-style-type: none;
-  padding: 0;
-}
-li {
-  display: inline-block;
-  margin: 0 10px;
-}
-a {
-  color: #42b983;
-}
 </style>
