@@ -1,55 +1,65 @@
 <template>
-<div>
-  <h2 v-if="resultCode != '00' ">{{resultCode}}</h2>
-  <h2 v-if="resultCode != '00' ">{{resultMsg}}</h2>
-  <h2>총 카운트 <b-badge>{{totalCount}}</b-badge></h2>
-  <b-btn @click="showAlert" variant="info" class="m-1">
-      Show alert with count-down timer
-    </b-btn>
-  <b-list-group v-if="resultCode == '00' ">
-    <b-list-group-item v-for="item in data">{{item}}</b-list-group-item>
-  </b-list-group>
-</div>
+  <div>
+    <b-card-group deck
+                  class="mb-3">
+        <b-card 
+                header="아파트"
+                class="text-center">
+            <p class="card-text">아파트 실거래 조회</p>
+            <b-btn href="#/Apt" variant="outline-success">이동</b-btn>
+        </b-card>
+        <b-card 
+                header="연립/다세대"
+                class="text-center">
+            <p class="card-text">연립/다세대 실거래 조회(작업예정)</p>
+        </b-card>
+        <b-card 
+                header="단독"
+                class="text-center">
+            <p class="card-text">단독/다가구 실거래 조회(작업예정)</p>
+        </b-card>
+    </b-card-group>
+    <b-card-group deck
+                  class="mb-3">
+        <b-card bg-variant="info"
+                text-variant="white"
+                header="토지"
+                class="text-center">
+            <p class="card-text">토지 실거래 조회(작업예정)</p>
+        </b-card>
+        <b-card bg-variant="warning"
+                text-variant="white"
+                header="오피스텔"
+                class="text-center">
+            <p class="card-text">오피스텔 실거래 조회(작업예정)</p>
+        </b-card>
+        <b-card bg-variant="danger"
+                text-variant="white"
+                header="분양권"
+                class="text-center">
+            <p class="card-text">분양권 실거래 조회(작업예정)</p>
+        </b-card>
+    </b-card-group>
+  </div>
 </template>
 
 <script>
-import xml from 'xml-to-json-promise';
+  export default  {
+    name: 'Main',
+    props: [],
+    mounted() {
 
-export default {
-  name: 'Main',
-  data () {
-    return {
-      data: [],
-      resultCode : '',
-      resultMsg : '',
-      totalCount : 0
-    }
-  },
-  mounted() {
-    let lawdCd = '11110';
-    let dealYmd = '201806';
-     this.$http.get('http://localhost:18081/api/data?lawdCd='+lawdCd+'&dealYmd='+dealYmd)
-     .then((result) => {
-        // console.log(result.data);
-        xml.xmlDataToJSON(result.data)
-        .then(json =>  {
-          let body = json.response.body[0];
-          let header = json.response.header[0];
-          console.log(body);
-          console.log(header);
-          this.resultCode = header.resultCode;
-          this.resultMsg = header.resultMsg;
-          this.totalCount = body.totalCount;
-          this.data = body.items[0].item;
-          // this.data = json;
-          // console.log(json);
-        })
-      })
-      .catch(err => console.log(err));   
+    },
+    data() {
+      return {
+
+      }
+    },
+    methods: {
+
+    },
+    computed: {
+
     }
 }
 </script>
-
-<!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped>
-</style>

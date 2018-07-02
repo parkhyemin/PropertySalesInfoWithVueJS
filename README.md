@@ -23,11 +23,14 @@
 ===================================================================
 작업진행 예정
 
-1.router활용하여 메인화면에서 아파트매매 내역화면으로 이동하기
+1.아파트매매 내역확인 화면에 bootstrap 적용(작업예정)
+ 아래 bootstrap 참고
 
-2.아파트매매 내역확인 화면에 bootstrap 적용(작업예정)
- # 아래 bootstrap 참고
+2.검색조건 추가
+ -> (서버쪽에서 stream으로 처리작업)
+ -> 검색 버튼 클릭 시 리스트 보여지도록
 
+3.아파트 정보(시, 군구 선택시)
 
 
 ===================================================================
@@ -38,8 +41,9 @@
  - 크로스 도메인 허용 샘플
    (D:\workspace\STS_workspace\springbootByMaven\src\main\java\com\example\springboot\WelcomeController.java)
 
-2.xml 형태의 응답을 Vue 클라이언트로 보낸 후, Parse하는 작업 필요
-my-chatbot 소스 참고 Footer.vue
+2.xml 형태의 응답을 Vue 클라이언트로 보낸 후, Parse하는 작업
+3.router활용하여 메인화면에서 아파트매매 내역화면으로 이동하기
+4.법정동 데이터 정리 (시/도, 시/군/구, 읍/면/동)
 
 
 
@@ -87,4 +91,14 @@ https://kr.vuejs.org/v2/guide/
 4.Vuejs with Bootstrap (Bootstrap4)
  https://bootstrap-vue.js.org
  http://hyper-cube.io/2017/07/16/vuejs-with-bootstrap/
- 
+
+5.법정동코드로 공동주택 단지 목록정보 공공API
+ https://www.data.go.kr/dataset/3039714/openapi.do?mypageFlag=Y (공동주택 단지 목록제공 서비스)
+
+ ex)
+ 도로명
+ http://apis.data.go.kr/1611000/AptListService/getRoadnameAptList?ServiceKey=AI9qcEoaK35mGSnhjGyfzEBVkfoS14LZFAn7BgBQbI5FwHzxJe1%2BNwPz0GcB%2F0JsMXpFLic28nDyRorftIW8yg%3D%3D&loadCode=263802006002&pageNo=1&numOfRows=10
+
+ 법정동
+ http://apis.data.go.kr/1611000/AptListService/getLegaldongAptList?ServiceKey=AI9qcEoaK35mGSnhjGyfzEBVkfoS14LZFAn7BgBQbI5FwHzxJe1%2BNwPz0GcB%2F0JsMXpFLic28nDyRorftIW8yg%3D%3D&loadCode=1126010200&pageNo=1&numOfRows=10
+
