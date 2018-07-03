@@ -5,14 +5,16 @@ import App from './App'
 import router from './router'
 import axios from 'axios'
 import BootstrapVue from 'bootstrap-vue';
+import underscore from 'vue-underscore';
     
 // using style-loader
 import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
 
-Vue.config.productionTip = false
-Vue.prototype.$http = axios
+Vue.config.productionTip = false;
+Vue.prototype.$http = axios;
 Vue.use(BootstrapVue);
+Vue.use(underscore);
 
 /* eslint-disable no-new */
 new Vue({
@@ -20,4 +22,4 @@ new Vue({
   router,
   components: { App },
   template: '<App/>'
-})
+}).$mount('#app');

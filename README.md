@@ -1,5 +1,5 @@
 목적 : 프론트 엔드프레임워크 Vue 습득(vue-cli를 통한 환경 Webpack),
-       스프링프레임워크5 습득 
+       SpringBoot2 습득 (스프링프레임워크5 기반) 
        자바8 신규기술 습득(stream 등)
        
 
@@ -9,7 +9,7 @@
 
 2. 어떻게 구현할 것인가
  - 개발환경 : 개발언어, 개발툴 등
- - 서버 : SpringBoot2.0 (SpringFrameworkd5)
+ - 서버 : SpringBoot2.0 (SpringFramework 5)
  - 프론트 : Vue
  - 클라이언트 Android 웹뷰까지 해보면 좋겠음
 
@@ -23,27 +23,28 @@
 ===================================================================
 작업진행 예정
 
-1.아파트매매 내역확인 화면에 bootstrap 적용(작업예정)
+1.법정동 아파트 목록 리스트 작업
+
+2.아파트매매 내역확인 화면에 bootstrap 적용(작업예정)
  아래 bootstrap 참고
 
-2.검색조건 추가
- -> (서버쪽에서 stream으로 처리작업)
- -> 검색 버튼 클릭 시 리스트 보여지도록
-
-3.아파트 정보(시, 군구 선택시)
 
 
 ===================================================================
 작업진행 완료
-1.공공API 크로스도메인 문제 => 보안상 허용안된다고 함(https://www.data.go.kr/information/QNA_0000000000014129/qna.do)
+ㅇ공공API 크로스도메인 문제 => 보안상 허용안된다고 함(https://www.data.go.kr/information/QNA_0000000000014129/qna.do)
  - URL호출 샘플
    (D:\workspace\ajaxproxy)
  - 크로스 도메인 허용 샘플
    (D:\workspace\STS_workspace\springbootByMaven\src\main\java\com\example\springboot\WelcomeController.java)
 
-2.xml 형태의 응답을 Vue 클라이언트로 보낸 후, Parse하는 작업
-3.router활용하여 메인화면에서 아파트매매 내역화면으로 이동하기
-4.법정동 데이터 정리 (시/도, 시/군/구, 읍/면/동)
+ㅇxml 형태의 응답을 Vue 클라이언트로 보낸 후, Parse하는 작업
+ㅇrouter활용하여 메인화면에서 아파트매매 내역화면으로 이동하기
+ㅇ법정동 데이터 정리 (시/도, 시/군/구, 읍/면/동)
+ㅇSTS DevTools 라이브러리 반영(Hot reload 기능)
+ㅇ조건 컴포넌트 분리(년, 월, 시/군 등)
+ㅇ법정동 코드기준 아파트 목록 API 구현
+
 
 
 
@@ -58,7 +59,7 @@ index.js에 import
 npm install --save xml-to-json-promise
 import xml from 'xml-to-json-promise';
 
-# bootstrap 적용(작업진행중 2018.06.29)
+# bootstrap 적용
 참고 : http://hyper-cube.io/2017/07/16/vuejs-with-bootstrap/
  npm install --save bootstrap-vue
     (main.js)
@@ -68,6 +69,17 @@ import xml from 'xml-to-json-promise';
     // using style-loader
     import 'bootstrap/dist/css/bootstrap.css'
     import 'bootstrap-vue/dist/bootstrap-vue.css'
+
+#Underscore 적용
+ 참고 : https://www.npmjs.com/package/vue-underscore
+  npm install vue-underscore
+  (main.js)
+  import underscore from 'vue-underscore';
+  Vue.use(underscore);
+ 
+  new Vue({
+    ...App
+  }).$mount('#app');
 
 ===================================================================
 
