@@ -1,22 +1,13 @@
 <template>
 <div>
   <!--검색영역-->
-  <Condition/>
-  
-  <h2 v-if="resultCode != '00' ">{{resultCode}}</h2>
-  <h2 v-if="resultCode != '00' ">{{resultMsg}}</h2>
-  <h2>총 카운트 <b-badge>{{totalCount}}</b-badge></h2>
-  <b-btn href="/" variant="info" class="m-1">
-      메인
-    </b-btn>
+  <Condition @callApi="callApi" @callAptListApi="callAptListApi" @callTradeAptApi="callTradeAptApi"/>
 
-    <b-table striped hover v-if="resultCode == '00' " :items="data"></b-table>
-    <b-table v-else :items="emptyList"></b-table> 
-  <!--<b-list-group v-if="resultCode == '00' ">
-    <b-list-group-item v-for="item in data" :key="item.id">
-      {{item}}
-    </b-list-group-item>
-  </b-list-group>-->
+  <!-- 아파트 리스트-->
+  <AptList v-if="isCallApi" :aptListData="aptListData" />
+
+  <!-- 아파트 거래내역 리스트 -->
+  <TradeList v-if="isCallApi" :aptTradeListData="aptTradeListData" />
 </div>
 </template>
 
@@ -24,50 +15,45 @@
 import xml from 'xml-to-json-promise';
 import {_} from 'vue-underscore';
 import Condition from './Condition';
+import AptList from './AptList';
+import TradeList from './TradeList';
 
 export default {
   name: 'Apt',
   components: { 
-        Condition
+        Condition, AptList, TradeList
     },
   data () {
     return {
       data: [],
-      resultCode : '',
-      resultMsg : '',
+      isCallApi : false, /* API 호출 전, 검색조건 validation */
+      aptListData : [],
+      aptTradeListData : [],
       totalCount : 0,
       emptyList:[{'조회된 거래내역이 없습니다.':' '}]
     }
   },
   methods:{
-    deleteProperty(obj) {
-      delete obj['지역코드'];
-      delete obj['건축년도']; 
-      // _.pick(obj, '지역코드','건축년도');
+    callApi(result){
+      console.log('+++++++++++callApi result:'+result)
+      this.isCallApi = result;
+    },
+    callAptListApi(aptList, header) {
+      console.log('+++++++++++callAptListApi aptList:');
+      console.log(aptList);
+      // console.log(aptList);
+      // console.log(header);
+      this.aptListData = aptList;
+    },
+    callTradeAptApi(tradeList, header){
+      console.log('+++++++++++callTradeAptApi aptList:');
+      console.log(tradeList);
+      this.aptTradeListData = tradeList;
     }
   },
   mounted() {
-    let lawdCd = '11110';
-    let dealYmd = '201806';
-     this.$http.get('http://localhost:18081/api/data?lawdCd='+lawdCd+'&dealYmd='+dealYmd)
-     .then((result) => {
-        xml.xmlDataToJSON(result.data)
-        .then(json =>  {
-          let body = json.response.body[0];
-          let header = json.response.header[0];
-          this.resultCode = header.resultCode;
-          this.resultMsg = header.resultMsg;
-          this.totalCount = body.totalCount;
-          //console.log(temp);
-          _.map(body.items[0].item, this.deleteProperty);
-          this.data = body.items[0].item;
-          
-          
-          
-        })
-      })
-      .catch(err => console.log(err)); 
-    }
+    
+  }
 }
 </script>
 

@@ -12,7 +12,7 @@
       <b-col>
         <b-input-group>
             <b-form-select v-model="s_dong" :options="o_dong" ref="el_dong"/>
-            <b-btn variant="primary" @click="getApiData" >조회</b-btn>
+            <b-btn variant="primary" @click="callApi" >조회</b-btn>
         </b-input-group>
       </b-col>
     </b-row>
@@ -44,7 +44,9 @@ export default {
         s_dong : '',
         o_dong : [],
         showVaildationAlert : false,
-        vailidationMsg : '조회 조건을 확인하세요.'
+        vailidationMsg : '조회 조건을 확인하세요.',
+        aptList : [],
+        trandeList : []
     }
   },
   mounted() {
@@ -83,10 +85,11 @@ export default {
         // console.log(sidoCode);
         this.o_sigungu = [];
         this.o_sigungu.push(this.generateOptionObj('', '시/군/구'));
+        this.s_sigungu = '';
     },
     setConditionSigungu(sidoCode) {
         this.initConditionSigungu();
-         this.$http.get('http://localhost:18081/api/sigungu?sido='+sidoCode)
+        this.$http.get('http://localhost:18081/api/sigungu?sido='+sidoCode)
         .then(res => {
             // console.log(res.data);
             _.each(res.data, this.addConditionSigungu);
@@ -95,6 +98,7 @@ export default {
     initConditionDong () {
         this.o_dong = [];
         this.o_dong.push(this.generateOptionObj('', '읍/면/동'));
+        this.s_dong = '';
     },
     setConditionDong(sigunguCode){
         this.initConditionDong();
@@ -133,16 +137,64 @@ export default {
         this.vailidationMsg = msg;
         return hasError;
     },
-    getApiData() {
-        console.log('+++++++++++++getApiData');
-        
-        // vailidation check
+    callApi () {
+         // vailidation check
         this.showVaildationAlert = this.vailidation();
+        this.$emit('callApi', !this.showVaildationAlert);
 
-        // 주변동 아파트 리스트 API call
+        if( !this.showVaildationAlert ){
+            this.getAptListApiData();
+            this.getTradeAptListApiData();
 
-        // 부모 창 리스트에 데이터 전송
-        
+        }
+    },
+    getAptListApiData() {
+        // 법정동 아파트 리스트 API call
+        let loadCode = this.s_dong;
+        console.log('+++++ loadCode : ' + loadCode);
+        this.$http.get('http://localhost:18081//api/aptList?loadCode='+loadCode+'&pageNo=1&numOfRows=50')
+        .then((result) => {
+            xml.xmlDataToJSON(result.data)
+            .then(json =>  {
+                let aptList = json.response.body[0].items[0].item;
+                let header = json.response.header[0];
+
+                // 부모 창 리스트에 데이터 전송
+                this.$emit('callAptListApi', aptList, header);
+            })
+        })
+        .catch(err => console.log(err)); 
+    },
+    getTradeAptListApiData() {
+        // 법정동 아파트 거래 리스트 API call
+        let lawdCd = this.s_dong.substr(0, 5);
+        let dealYmd = this.s_year + this.addZero(this.s_month);
+        console.log('lawdCd:'+lawdCd)
+        this.$http.get('http://localhost:18081/api/data?LAWD_CD='+lawdCd+'&DEAL_YMD='+dealYmd)
+        .then((result) => {
+            xml.xmlDataToJSON(result.data)
+            .then(json =>  {
+                let body = json.response.body[0];
+                let header = json.response.header[0];
+                this.totalCount = body.totalCount;
+                //console.log(temp);
+                _.map(body.items[0].item, this.deleteProperty);
+                let tradeList = body.items[0].item;
+                // 부모 창 리스트에 데이터 전송
+                this.$emit('callTradeAptApi', tradeList, header);
+            })
+        })
+        .catch(err => console.log(err)); 
+    },
+    deleteProperty(obj) {
+      delete obj['지역코드'];
+      delete obj['건축년도']; 
+      // _.pick(obj, '지역코드','건축년도');
+    },
+    addZero(val){
+        let temp = parseInt(val);
+        let result = '' + temp;
+        return result < 10 ? result = '0' + temp : result;
     }
   }
   
