@@ -73,7 +73,7 @@ import xml from 'xml-to-json-promise';
     import 'bootstrap/dist/css/bootstrap.css'
     import 'bootstrap-vue/dist/bootstrap-vue.css'
 
-#Underscore 적용
+# Underscore 적용
  참고 : https://www.npmjs.com/package/vue-underscore
   npm install vue-underscore
   (main.js)
@@ -84,7 +84,7 @@ import xml from 'xml-to-json-promise';
     ...App
   }).$mount('#app');
 
-#RxJS(vue-rx) 적용
+# RxJS(vue-rx) 적용
   참고 : https://github.com/vuejs/vue-rx
   npm install vue-rx rxjs --save
   (main.js)
@@ -98,7 +98,7 @@ import xml from 'xml-to-json-promise';
 
 ===================================================================
 
-**참고사이트
+# 참고사이트
 - 시군구 코드
   다운로드 파일 중 KIKcd_H.20180122(말소코드포함) 사용
   http://www.mois.go.kr/frt/bbs/type001/commonSelectBoardArticle.do?bbsId=BBSMSTR_000000000052&nttId=61552
