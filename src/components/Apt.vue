@@ -1,7 +1,7 @@
 <template>
 <div>
   <!--검색영역-->
-  <Condition @callApi="callApi" @callAptListApi="callAptListApi" @callTradeAptApi="callTradeAptApi"/>
+  <Condition @callApi="callApi" @callAptListApi="callAptListApi" @callTradeAptApi="callTradeAptApi" />
 
   <!-- 아파트 리스트-->
   <AptList v-if="isCallApi" :aptListData="aptListData" />
@@ -35,19 +35,21 @@ export default {
   },
   methods:{
     callApi(result){
-      console.log('+++++++++++callApi result:'+result)
+      // console.log('+++++++++++callApi result:'+result)
+      this.aptListData = [];
+      this.aptTradeListData = [];
       this.isCallApi = result;
     },
-    callAptListApi(aptList, header) {
-      console.log('+++++++++++callAptListApi aptList:');
-      console.log(aptList);
+    callAptListApi(aptList) {
+      // console.log('+++++++++++callAptListApi aptList:');
+      // console.log(aptList);
       // console.log(aptList);
       // console.log(header);
       this.aptListData = aptList;
     },
     callTradeAptApi(tradeList, header){
-      console.log('+++++++++++callTradeAptApi aptList:');
-      console.log(tradeList);
+      // console.log('+++++++++++callTradeAptApi aptList:');
+      // console.log(tradeList);
       this.aptTradeListData = tradeList;
     }
   },

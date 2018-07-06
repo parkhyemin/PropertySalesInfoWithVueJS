@@ -25,28 +25,31 @@
 </template>
 
 <script>
+import { Observable, from } from 'rxjs';
+import { filter, bufferCount, map, flatMap, pluck, first } from 'rxjs/operators'
+import { fromPromise } from 'rxjs/observable/fromPromise'
 import xml from 'xml-to-json-promise';
 import {_} from 'vue-underscore';
 
 export default {
   name: 'Condition',
-  props: [],
+  props: [''],
   data () {
     return {
         s_year : null,
         o_year: [],
         s_month : null,
         o_month: [],
-        s_sido : '',
+        s_sido : null,
         o_sido : [],
-        s_sigungu : '',
+        s_sigungu : null,
         o_sigungu : [],
-        s_dong : '',
+        s_dong : null,
         o_dong : [],
         showVaildationAlert : false,
         vailidationMsg : '조회 조건을 확인하세요.',
         aptList : [],
-        trandeList : []
+        tradeList : []
     }
   },
   mounted() {
@@ -54,26 +57,37 @@ export default {
       this.initConditionSido();
       this.initConditionSigungu();
       this.initConditionDong();
+      this.$emit('callApi', false); // 아파트 목록, 아파트 거래내역 숨김
+
   },
   methods:{
     initConditionDate() {
         // set Year
-        let year = new Date().getFullYear();
-        for(var i=0; i<=10; i++){
-            this.o_year.push( this.generateOptionObj(year-i, year-i));
-        }
-        this.s_year = year;
+        const year = new Date().getFullYear();
+        from(this.generateArrayByCount(10))
+        .pipe(map(x => this.generateOptionObj(year-x, year-x)))
+        .subscribe(res => this.o_year.push(res))
+        // this.s_year = year;
+        this.s_year = {val : year, txt: year}
 
         // set month
-        for(var i=0; i<12; i++){
-            this.o_month.push( this.generateOptionObj(i+1, i+1));
-        }
-        this.s_month = new Date().getMonth() + 1;
+        from(this.generateArrayByCount(12))
+        .pipe(map(x => this.generateOptionObj(x+1, x+1)))
+        .subscribe(res => this.o_month.push(res))
+        // this.s_month = new Date().getMonth() + 1;
+        const mon = new Date().getMonth() + 1;
+        this.s_month = {val : mon, txt: mon}
+    },
+    generateArrayByCount(count) {
+        let array = [];
+        for(let i=0; i<count; i++)
+            array.push(i);
+        return array;
     },
     initConditionSido() {
         this.o_sido = [];
         this.o_sido.push(this.generateOptionObj('', '시/도'));
-
+        this.s_sido = {val:'', txt:'시/도'};
         this.$http.get('http://localhost:18081/api/sido')
         .then(res => {
             //console.log(res.data);
@@ -85,11 +99,11 @@ export default {
         // console.log(sidoCode);
         this.o_sigungu = [];
         this.o_sigungu.push(this.generateOptionObj('', '시/군/구'));
-        this.s_sigungu = '';
+        this.s_sigungu = {val:'', txt:'시/군/구'};
     },
     setConditionSigungu(sidoCode) {
         this.initConditionSigungu();
-        this.$http.get('http://localhost:18081/api/sigungu?sido='+sidoCode)
+        this.$http.get('http://localhost:18081/api/sigungu?sido='+sidoCode.val)
         .then(res => {
             // console.log(res.data);
             _.each(res.data, this.addConditionSigungu);
@@ -98,18 +112,18 @@ export default {
     initConditionDong () {
         this.o_dong = [];
         this.o_dong.push(this.generateOptionObj('', '읍/면/동'));
-        this.s_dong = '';
+        this.s_dong = {val:'', txt:'읍/면/동'};
     },
     setConditionDong(sigunguCode){
         this.initConditionDong();
-        this.$http.get('http://localhost:18081/api/dong?sigungu='+sigunguCode)
+        this.$http.get('http://localhost:18081/api/dong?sigungu='+sigunguCode.val)
         .then(res => {
             // console.log(res.data);
             _.each(res.data, this.addConditionDong);
         })
     },
     generateOptionObj(val, text) {
-        return {value:val, text:text};
+        return {value:{val : val, txt: text}, text:text};
     },
     addConditionSido(obj) {
         this.o_sido.push(this.generateOptionObj(obj.code, obj.sido))
@@ -123,13 +137,13 @@ export default {
     vailidation() {
         let msg;
         let hasError = false;
-        if(! this.$refs.el_sido.value){
+        if(! this.s_sido.val){
             msg = '(시/도)를 선택하세요';
             hasError = true;
-        }else if(! this.$refs.el_sigungu.value){
+        }else if(! this.s_sigungu.val){
             msg = '(시/군/구)를 선택하세요';
             hasError = true;
-        }else if(! this.$refs.el_dong.value){
+        }else if(! this.s_dong.val){
             msg = '(읍/면/동)을 선택하세요';
             hasError = true;
         }
@@ -142,59 +156,69 @@ export default {
         this.showVaildationAlert = this.vailidation();
         this.$emit('callApi', !this.showVaildationAlert);
 
+        this.aptList = [],
+        this.tradeList = []
+
         if( !this.showVaildationAlert ){
-            this.getAptListApiData();
+            // this.getAptListApiData(); // 데이터 별로임.. 안쓰는게 날 듯
             this.getTradeAptListApiData();
 
         }
     },
     getAptListApiData() {
         // 법정동 아파트 리스트 API call
-        let loadCode = this.s_dong;
-        console.log('+++++ loadCode : ' + loadCode);
-        this.$http.get('http://localhost:18081//api/aptList?loadCode='+loadCode+'&pageNo=1&numOfRows=50')
-        .then((result) => {
-            xml.xmlDataToJSON(result.data)
-            .then(json =>  {
-                let aptList = json.response.body[0].items[0].item;
-                let header = json.response.header[0];
-
-                // 부모 창 리스트에 데이터 전송
-                this.$emit('callAptListApi', aptList, header);
-            })
-        })
-        .catch(err => console.log(err)); 
+        this.aptList = [];
+        const loadCode = this.s_dong.val;
+        console.log('+++++ getAptListApiData loadCode : ' + loadCode);
+        const apiXmlData = this.$http.get('http://localhost:18081//api/getLegaldongAptList?loadCode='+loadCode+'&pageNo=1&numOfRows=50')
+                        .then((result) => xml.xmlDataToJSON(result.data).then());
+        fromPromise(apiXmlData)
+        .pipe(flatMap(x => x.response.body))
+        .pipe(filter(x => _.first(x['totalCount']) >0 ))
+        .pipe(pluck('items'))
+        .pipe(flatMap(x => x ))
+        .pipe(pluck('item'))
+        .pipe(flatMap(x => this.pickAndDelField(x, ['kaptCode','kaptName'])))
+        .pipe(bufferCount(3))
+        .subscribe(res => {
+            this.aptList.push(res);
+            this.$emit('callAptListApi', this.aptList); 
+        });
+        
     },
     getTradeAptListApiData() {
         // 법정동 아파트 거래 리스트 API call
-        let lawdCd = this.s_dong.substr(0, 5);
-        let dealYmd = this.s_year + this.addZero(this.s_month);
-        console.log('lawdCd:'+lawdCd)
-        this.$http.get('http://localhost:18081/api/data?LAWD_CD='+lawdCd+'&DEAL_YMD='+dealYmd)
-        .then((result) => {
-            xml.xmlDataToJSON(result.data)
-            .then(json =>  {
-                let body = json.response.body[0];
-                let header = json.response.header[0];
-                this.totalCount = body.totalCount;
-                //console.log(temp);
-                _.map(body.items[0].item, this.deleteProperty);
-                let tradeList = body.items[0].item;
-                // 부모 창 리스트에 데이터 전송
-                this.$emit('callTradeAptApi', tradeList, header);
-            })
-        })
-        .catch(err => console.log(err)); 
-    },
-    deleteProperty(obj) {
-      delete obj['지역코드'];
-      delete obj['건축년도']; 
-      // _.pick(obj, '지역코드','건축년도');
+        const lawdCd = this.s_dong.val.substr(0, 5);
+        const dealYmd = this.s_year.val + this.addZero(this.s_month.val);
+        const apiXmlData = this.$http.get('http://localhost:18081/api/getRTMSDataSvcAptTrade?LAWD_CD='+lawdCd+'&DEAL_YMD='+dealYmd)
+                        .then((result) => xml.xmlDataToJSON(result.data).then());
+        
+        fromPromise(apiXmlData)
+        .pipe(flatMap(x => x.response.body))
+        .pipe(filter(x => _.first(x['totalCount']) >0 ))
+        .pipe(pluck('items'))
+        .pipe(flatMap(x => x ))
+        .pipe(pluck('item'))
+        .pipe(flatMap(x => this.pickAndDelField(x, ['거래금액','건축년도','법정동','아파트','월','일','전용면적','층'], ['년','지번','지역코드'])))
+        .pipe(filter(x =>  x['법정동'].trim() === this.s_dong.txt ))
+        .subscribe(res => {
+            this.tradeList.push(res);
+            this.$emit('callTradeAptApi', this.tradeList);
+        });
+
     },
     addZero(val){
         let temp = parseInt(val);
         let result = '' + temp;
         return result < 10 ? result = '0' + temp : result;
+    },
+    pickAndDelField(x, pic, del) {
+        _.each(x, (v) => {
+                _.each(pic, (p) => v[p] = _.first(v[p]) )
+                _.each(del, (d) => delete v[d] )
+            }
+        )
+        return x;
     }
   }
   
