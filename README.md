@@ -23,8 +23,6 @@
 ===================================================================
 # 작업진행 예정
 
-- proxy 사용
-
 - 아파트 목록에서 아파트 클릭 시, 지도 API 사용하여 마크 표시(보류)
 
 - css 작업
@@ -47,6 +45,7 @@
 - 법정동 코드로 아파트 실거래 필터 걸도록 작업
   구단위로만 데이터 제공하고 있음
   https://www.data.go.kr/information/QNA_0000000000016947/qna.do
+- Proxy 설정 : /config/index.js
 
 
 
@@ -59,8 +58,8 @@ npm install --save axios
 index.js에 import
 
 # API로 받은 xml 데이터 json으로 변경
-npm install --save xml-to-json-promise
-import xml from 'xml-to-json-promise';
+npm install xml2json-light
+
 
 # bootstrap 적용
 참고 : http://hyper-cube.io/2017/07/16/vuejs-with-bootstrap/

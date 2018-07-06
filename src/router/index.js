@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import Main from '@/components/Main'
-import Apt from '@/components/apt/Apt'
+import AptMain from '@/components/apt/AptMain'
 import RxJsTest from '@/components/test/RxJsTest'
 
 Vue.use(Router)
@@ -15,8 +15,8 @@ export default new Router({
     },
     {
       path: '/Apt',
-      name: 'Apt',
-      component: Apt
+      name: 'AptMain',
+      component: AptMain
     },
     {
       path: '/test',

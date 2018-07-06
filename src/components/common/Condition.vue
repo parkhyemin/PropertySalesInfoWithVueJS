@@ -28,7 +28,7 @@
 import { Observable, from } from 'rxjs';
 import { filter, bufferCount, map, flatMap, pluck, first } from 'rxjs/operators'
 import { fromPromise } from 'rxjs/observable/fromPromise'
-import xml from 'xml-to-json-promise';
+import xml from 'xml2json-light';
 import {_} from 'vue-underscore';
 
 export default {
@@ -88,7 +88,7 @@ export default {
         this.o_sido = [];
         this.o_sido.push(this.generateOptionObj('', '시/도'));
         this.s_sido = {val:'', txt:'시/도'};
-        this.$http.get('http://localhost:18081/api/sido')
+        this.$http.get('/api/sido')
         .then(res => {
             //console.log(res.data);
             _.each(res.data, this.addConditionSido);
@@ -103,7 +103,7 @@ export default {
     },
     setConditionSigungu(sidoCode) {
         this.initConditionSigungu();
-        this.$http.get('http://localhost:18081/api/sigungu?sido='+sidoCode.val)
+        this.$http.get('/api/sigungu?sido='+sidoCode.val)
         .then(res => {
             // console.log(res.data);
             _.each(res.data, this.addConditionSigungu);
@@ -116,7 +116,7 @@ export default {
     },
     setConditionDong(sigunguCode){
         this.initConditionDong();
-        this.$http.get('http://localhost:18081/api/dong?sigungu='+sigunguCode.val)
+        this.$http.get('/api/dong?sigungu='+sigunguCode.val)
         .then(res => {
             // console.log(res.data);
             _.each(res.data, this.addConditionDong);
@@ -170,15 +170,14 @@ export default {
         this.aptList = [];
         const loadCode = this.s_dong.val;
         console.log('+++++ getAptListApiData loadCode : ' + loadCode);
-        const apiXmlData = this.$http.get('http://localhost:18081//api/getLegaldongAptList?loadCode='+loadCode+'&pageNo=1&numOfRows=50')
-                        .then((result) => xml.xmlDataToJSON(result.data).then());
+        const apiXmlData = this.$http.get('/api/getLegaldongAptList?loadCode='+loadCode+'&pageNo=1&numOfRows=50')
+                        .then((result) => xml.xml2json(result.data));
         fromPromise(apiXmlData)
-        .pipe(flatMap(x => x.response.body))
-        .pipe(filter(x => _.first(x['totalCount']) >0 ))
+        .pipe(map(x => x.response.body))
+        .pipe(filter(x => x['totalCount'] > 0 ))
         .pipe(pluck('items'))
-        .pipe(flatMap(x => x ))
         .pipe(pluck('item'))
-        .pipe(flatMap(x => this.pickAndDelField(x, ['kaptCode','kaptName'])))
+        .pipe(flatMap(x=> x))
         .pipe(bufferCount(3))
         .subscribe(res => {
             this.aptList.push(res);
@@ -190,17 +189,17 @@ export default {
         // 법정동 아파트 거래 리스트 API call
         const lawdCd = this.s_dong.val.substr(0, 5);
         const dealYmd = this.s_year.val + this.addZero(this.s_month.val);
-        const apiXmlData = this.$http.get('http://localhost:18081/api/getRTMSDataSvcAptTrade?LAWD_CD='+lawdCd+'&DEAL_YMD='+dealYmd)
-                        .then((result) => xml.xmlDataToJSON(result.data).then());
+        const apiXmlData = this.$http.get('/api/getRTMSDataSvcAptTrade?LAWD_CD='+lawdCd+'&DEAL_YMD='+dealYmd)
+                        .then((result) => xml.xml2json(result.data));
         
         fromPromise(apiXmlData)
-        .pipe(flatMap(x => x.response.body))
-        .pipe(filter(x => _.first(x['totalCount']) >0 ))
+        .pipe(map(x => x.response.body))
+        .pipe(filter(x => x['totalCount'] > 0 ))
         .pipe(pluck('items'))
-        .pipe(flatMap(x => x ))
         .pipe(pluck('item'))
-        .pipe(flatMap(x => this.pickAndDelField(x, ['거래금액','건축년도','법정동','아파트','월','일','전용면적','층'], ['년','지번','지역코드'])))
-        .pipe(filter(x =>  x['법정동'].trim() === this.s_dong.txt ))
+        .pipe(map(x => this.deleteField(x, ['년','지번','지역코드'])))
+        .pipe(flatMap(x=> x))
+        .pipe(filter(x =>  x['법정동'] === this.s_dong.txt ))
         .subscribe(res => {
             this.tradeList.push(res);
             this.$emit('callTradeAptApi', this.tradeList);
@@ -212,14 +211,14 @@ export default {
         let result = '' + temp;
         return result < 10 ? result = '0' + temp : result;
     },
-    pickAndDelField(x, pic, del) {
+    deleteField(x, del) {
         _.each(x, (v) => {
-                _.each(pic, (p) => v[p] = _.first(v[p]) )
                 _.each(del, (d) => delete v[d] )
             }
         )
         return x;
     }
+     
   }
   
 }

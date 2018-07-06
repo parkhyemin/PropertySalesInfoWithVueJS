@@ -17,7 +17,7 @@ import AptList from './AptList';
 import TradeList from './TradeList';
 
 export default {
-  name: 'Apt',
+  name: 'AptMain',
   components: { 
         Condition, AptList, TradeList
     },
@@ -34,7 +34,8 @@ export default {
   methods:{
     callApi(result){
       this.aptListData = [];
-      this.aptTradeListData = [];
+      // this.aptTradeListData = [];
+      this.aptTradeListData = [{'':'조회된 내용이 없습니다'}];
       this.isCallApi = result;
     },
     callAptListApi(aptList) {

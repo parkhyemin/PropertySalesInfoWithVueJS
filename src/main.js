@@ -6,7 +6,7 @@ import router from './router'
 import axios from 'axios'
 import BootstrapVue from 'bootstrap-vue';
 import underscore from 'vue-underscore';
-import VueRx from 'vue-rx'
+import VueRx from 'vue-rx';
 
 // using style-loader
 import 'bootstrap/dist/css/bootstrap.css'
@@ -16,7 +16,7 @@ Vue.config.productionTip = false;
 Vue.prototype.$http = axios;
 Vue.use(BootstrapVue);
 Vue.use(underscore);
-Vue.use(VueRx)
+Vue.use(VueRx);
 
 
 /* eslint-disable no-new */
