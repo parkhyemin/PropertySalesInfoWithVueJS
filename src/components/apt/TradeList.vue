@@ -1,9 +1,5 @@
 <template>
     <div>
-        <!--<h2>총 카운트 <b-badge>{{totalCount}}</b-badge></h2>
-        <b-btn href="/" variant="info" class="m-1">
-        메인
-        </b-btn>-->
         <b-table striped hover :items="aptTradeListData"></b-table>
     </div>    
 </template>

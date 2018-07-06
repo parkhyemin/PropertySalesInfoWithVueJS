@@ -12,9 +12,7 @@
 </template>
 
 <script>
-import xml from 'xml-to-json-promise';
-import {_} from 'vue-underscore';
-import Condition from './Condition';
+import Condition from '../common/Condition';
 import AptList from './AptList';
 import TradeList from './TradeList';
 
@@ -35,21 +33,14 @@ export default {
   },
   methods:{
     callApi(result){
-      // console.log('+++++++++++callApi result:'+result)
       this.aptListData = [];
       this.aptTradeListData = [];
       this.isCallApi = result;
     },
     callAptListApi(aptList) {
-      // console.log('+++++++++++callAptListApi aptList:');
-      // console.log(aptList);
-      // console.log(aptList);
-      // console.log(header);
       this.aptListData = aptList;
     },
-    callTradeAptApi(tradeList, header){
-      // console.log('+++++++++++callTradeAptApi aptList:');
-      // console.log(tradeList);
+    callTradeAptApi(tradeList){
       this.aptTradeListData = tradeList;
     }
   },

@@ -1,8 +1,8 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import Main from '@/components/Main'
-import Apt from '@/components/Apt'
-import RxJsTest from '@/components/RxJsTest'
+import Apt from '@/components/apt/Apt'
+import RxJsTest from '@/components/test/RxJsTest'
 
 Vue.use(Router)
 

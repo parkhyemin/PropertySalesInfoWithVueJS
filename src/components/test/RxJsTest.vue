@@ -1,5 +1,4 @@
 <template>
-  <!--<p>{{message$}}</p>-->
   <ul>
     <li v-for="(m, index) in msg" :key="'m_'+index">
         <span v-for="(a, index) in m" :key="'a_'+index">{{a}} </span>
@@ -21,8 +20,6 @@ import { bufferCount, map, flatMap, pluck, first, filter } from 'rxjs/operators'
 import { fromPromise } from 'rxjs/observable/fromPromise'
 import {_} from 'vue-underscore';
 import {RxHttpRequest} from 'rx-http-request';
-import RestApiService from '../services/api'
-
 
 
 export default {
@@ -33,13 +30,6 @@ export default {
             data : []
         }
     },
-    // subscriptions() {
-    //     return {
-    //         message$: from(
-    //                         ['Exam1111ple Message', 'Example Message Final']
-    //                     )
-    //     }
-    // },
     mounted() {
         // RxHttpRequest.get('http://localhost:18081//api/getLegaldongAptList?loadCode=1126010200&pageNo=1&numOfRows=5')
         // .pipe(map(resp => resp.body))
