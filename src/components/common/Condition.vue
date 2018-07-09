@@ -1,7 +1,7 @@
 <template>
 <div>
   <b-container fluid>
-    <b-row class="mb-3"><h4>실거래가</h4></b-row>
+    <b-row class="mb-3"><h4>실거래가-{{svcData.text}}</h4></b-row>
     <b-row class="mb-3">
       <b-col><b-form-select v-model="s_year" :options="o_year" /></b-col>
       <b-col><b-form-select v-model="s_month" :options="o_month" /></b-col>
@@ -33,7 +33,7 @@ import {_} from 'vue-underscore';
 
 export default {
   name: 'Condition',
-  props: [''],
+  props: ['svcData'],
   data () {
     return {
         s_year : null,
@@ -67,14 +67,12 @@ export default {
         from(this.generateArrayByCount(10))
         .pipe(map(x => this.generateOptionObj(year-x, year-x)))
         .subscribe(res => this.o_year.push(res))
-        // this.s_year = year;
         this.s_year = {val : year, txt: year}
 
         // set month
         from(this.generateArrayByCount(12))
         .pipe(map(x => this.generateOptionObj(x+1, x+1)))
         .subscribe(res => this.o_month.push(res))
-        // this.s_month = new Date().getMonth() + 1;
         const mon = new Date().getMonth() + 1;
         this.s_month = {val : mon, txt: mon}
     },
@@ -158,33 +156,37 @@ export default {
 
         this.aptList = [],
         this.tradeList = []
-
         if( !this.showVaildationAlert ){
-            // this.getAptListApiData(); // 데이터 별로임.. 안쓰는게 날 듯
-            this.getTradeAptListApiData();
-
+            if(this.svcData.value === 'Apt'){
+                // this.getAptListApiData(); // 데이터 별로임.. 안쓰는게 날 듯
+                this.getTradeAptListApiData();
+            }else if(this.svcData.value === 'Multi'){
+                this.getTradeMultiListApiData();
+            }else if(this.svcData.value === 'Detach'){
+                this.getTradeDetachListApiData();
+            }
         }
     },
-    getAptListApiData() {
-        // 법정동 아파트 리스트 API call
-        this.aptList = [];
-        const loadCode = this.s_dong.val;
-        console.log('+++++ getAptListApiData loadCode : ' + loadCode);
-        const apiXmlData = this.$http.get('/api/getLegaldongAptList?loadCode='+loadCode+'&pageNo=1&numOfRows=50')
-                        .then((result) => xml.xml2json(result.data));
-        fromPromise(apiXmlData)
-        .pipe(map(x => x.response.body))
-        .pipe(filter(x => x['totalCount'] > 0 ))
-        .pipe(pluck('items'))
-        .pipe(pluck('item'))
-        .pipe(flatMap(x=> x))
-        .pipe(bufferCount(3))
-        .subscribe(res => {
-            this.aptList.push(res);
-            this.$emit('callAptListApi', this.aptList); 
-        });
+    // getAptListApiData() {
+    //     // 법정동 아파트 리스트 API call
+    //     this.aptList = [];
+    //     const loadCode = this.s_dong.val;
+    //     console.log('+++++ getAptListApiData loadCode : ' + loadCode);
+    //     const apiXmlData = this.$http.get('/api/getLegaldongAptList?loadCode='+loadCode+'&pageNo=1&numOfRows=50')
+    //                     .then((result) => xml.xml2json(result.data));
+    //     fromPromise(apiXmlData)
+    //     .pipe(map(x => x.response.body))
+    //     .pipe(filter(x => x['totalCount'] > 0 ))
+    //     .pipe(pluck('items'))
+    //     .pipe(pluck('item'))
+    //     .pipe(flatMap(x=> x))
+    //     .pipe(bufferCount(3))
+    //     .subscribe(res => {
+    //         this.aptList.push(res);
+    //         this.$emit('callAptListApi', this.aptList); 
+    //     });
         
-    },
+    // },
     getTradeAptListApiData() {
         // 법정동 아파트 거래 리스트 API call
         const lawdCd = this.s_dong.val.substr(0, 5);
@@ -197,14 +199,60 @@ export default {
         .pipe(filter(x => x['totalCount'] > 0 ))
         .pipe(pluck('items'))
         .pipe(pluck('item'))
+        .pipe(map(x=> this.checkArray(x)))
         .pipe(map(x => this.deleteField(x, ['년','지번','지역코드'])))
         .pipe(flatMap(x=> x))
         .pipe(filter(x =>  x['법정동'] === this.s_dong.txt ))
         .subscribe(res => {
             this.tradeList.push(res);
-            this.$emit('callTradeAptApi', this.tradeList);
+            this.$emit('callTradeApi', this.tradeList);
         });
 
+    },
+    getTradeMultiListApiData() {
+        // 법정동 연립/다세대 거래 리스트 API call
+        const lawdCd = this.s_dong.val.substr(0, 5);
+        const dealYmd = this.s_year.val + this.addZero(this.s_month.val);
+        const apiXmlData = this.$http.get('/api/getRTMSDataSvcRHTrade?LAWD_CD='+lawdCd+'&DEAL_YMD='+dealYmd)
+                        .then((result) => xml.xml2json(result.data));
+        
+        fromPromise(apiXmlData)
+        .pipe(map(x => x.response.body))
+        .pipe(filter(x => x['totalCount'] > 0 ))
+        .pipe(pluck('items'))
+        .pipe(pluck('item'))
+        .pipe(map(x=> this.checkArray(x)))
+        .pipe(map(x => this.deleteField(x, ['년','지번','지역코드'])))
+        .pipe(flatMap(x=> x))
+        .pipe(filter(x =>  x['법정동'] === this.s_dong.txt ))
+        .subscribe(res => {
+            this.tradeList.push(res);
+            this.$emit('callTradeApi', this.tradeList);
+        });
+    }, 
+    getTradeDetachListApiData () {
+        // 법정동 단독주택 거래 리스트 API call
+        const lawdCd = this.s_dong.val.substr(0, 5);
+        const dealYmd = this.s_year.val + this.addZero(this.s_month.val);
+        const apiXmlData = this.$http.get('/api/getRTMSDataSvcSHTrade?LAWD_CD='+lawdCd+'&DEAL_YMD='+dealYmd)
+                        .then((result) => xml.xml2json(result.data));
+        
+        fromPromise(apiXmlData)
+        .pipe(map(x => x.response.body))
+        .pipe(filter(x => x['totalCount'] > 0 ))
+        .pipe(pluck('items'))
+        .pipe(pluck('item'))
+        .pipe(map(x=> this.checkArray(x)))
+        .pipe(map(x => this.deleteField(x, ['년','지번','지역코드'])))
+        .pipe(flatMap(x=> x))
+        .pipe(filter(x =>  x['법정동'] === this.s_dong.txt ))
+        .subscribe(res => {
+            this.tradeList.push(res);
+            this.$emit('callTradeApi', this.tradeList);
+        });
+    },
+    checkArray (val) {
+        return (_.isArray(val)) ? val : [val];
     },
     addZero(val){
         let temp = parseInt(val);

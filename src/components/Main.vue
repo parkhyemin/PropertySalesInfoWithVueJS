@@ -11,12 +11,14 @@
         <b-card 
                 header="연립/다세대"
                 class="text-center">
-            <p class="card-text">연립/다세대 실거래 조회(작업예정)</p>
+            <p class="card-text">연립/다세대 실거래 조회</p>
+            <b-btn href="#/Multi" variant="outline-success">이동</b-btn>
         </b-card>
         <b-card 
                 header="단독"
                 class="text-center">
-            <p class="card-text">단독/다가구 실거래 조회(작업예정)</p>
+            <p class="card-text">단독/다가구 실거래 조회</p>
+            <b-btn href="#/Detach" variant="outline-success">이동</b-btn>
         </b-card>
     </b-card-group>
     <b-card-group deck

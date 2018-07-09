@@ -1,6 +1,6 @@
 <template>
     <div>
-        <b-table striped hover :items="aptTradeListData"></b-table>
+        <b-table striped hover :items="tradeListData"></b-table>
     </div>    
 </template>
 
@@ -8,7 +8,7 @@
 
 export default {
   name: 'TradeList',
-  props: ['aptTradeListData'],
+  props: ['tradeListData'],
   components: { 
         
     },

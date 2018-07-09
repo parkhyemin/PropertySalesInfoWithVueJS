@@ -3,44 +3,32 @@
   <!--검색영역-->
   <Condition :svcData="svcData" @callApi="callApi" @callTradeApi="callTradeApi" />
 
-  <!-- 아파트 리스트-->
-  <AptList v-if="isCallApi" :aptListData="aptListData" />
-
-  <!-- 아파트 거래내역 리스트 -->
+  <!-- 다세대/연립 거래내역 리스트 -->
   <TradeList v-if="isCallApi" :tradeListData="tradeListData" />
 </div>
 </template>
 
 <script>
 import Condition from '../common/Condition';
-import AptList from './AptList';
 import TradeList from '../common/TradeList';
 
 export default {
-  name: 'AptMain',
+  name: 'DetachMain',
   components: { 
-        Condition, AptList, TradeList
+        Condition, TradeList
     },
   data () {
     return {
-      svcData: {value:'Apt', text:'아파트'},
+      svcData: {value:'Detach', text:'단독/다가구'},
       isCallApi : false, /* API 호출 전, 검색조건 validation */
-      aptListData : [],
-      tradeListData : [],
-      totalCount : 0,
-      emptyList:[{'조회된 거래내역이 없습니다.':' '}]
+      tradeListData : []
     }
   },
   methods:{
     callApi(result){
-      this.aptListData = [];
-      // this.aptTradeListData = [];
       this.tradeListData = [{'':'조회된 내용이 없습니다'}];
       this.isCallApi = result;
     },
-    // callAptListApi(aptList) {
-    //   this.aptListData = aptList;
-    // },
     callTradeApi(tradeList){
       this.tradeListData = tradeList;
     }

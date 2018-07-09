@@ -23,9 +23,11 @@
 ===================================================================
 # 작업진행 예정
 
-- 아파트 목록에서 아파트 클릭 시, 지도 API 사용하여 마크 표시(보류)
+- 연립/다세대, 단독주택 작업
+ http://openapi.molit.go.kr:8081/OpenAPI_ToolInstallPackage/service/rest/RTMSOBJSvc/getRTMSDataSvcRHTrade?ServiceKey=AI9qcEoaK35mGSnhjGyfzEBVkfoS14LZFAn7BgBQbI5FwHzxJe1%2BNwPz0GcB%2F0JsMXpFLic28nDyRorftIW8yg%3D%3D&LAWD_CD=11110&DEAL_YMD=201806
 
 - css 작업
+- 아파트 목록에서 아파트 클릭 시, 지도 API 사용하여 마크 표시(보류)
 
 
 
