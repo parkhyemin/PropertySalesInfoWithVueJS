@@ -21,6 +21,8 @@ import {_} from 'vue-underscore';
 import {RxHttpRequest} from 'rx-http-request';
 import xml2json from 'xml2json-light';
 
+import TestService from '../service/TestService.js'
+
 
 export default {
     name: 'RxjsTest',
@@ -31,6 +33,17 @@ export default {
         }
     },
     mounted() {
+        // Custom 컴포넌트 테스트
+        // console.log(TestService);
+        let s$ = TestService.getApiData();
+        s$
+        .pipe(filter(x =>  x['법정동'] === '평창동' ))
+        .subscribe(res => {
+            // this.tradeList.push(res);
+            // this.$emit('callTradeApi', this.tradeList);
+            console.log(res);
+        });
+        
         
         // Proxy 테스트
         // this.$http.get('/api/sido')
@@ -40,9 +53,9 @@ export default {
         // .then((res) => console.log(res) );
 
         
-        const apiXmlData = this.$http.get('/api/getRTMSDataSvcRHTrade?LAWD_CD=11110&DEAL_YMD=201512')
-                        .then((result) => xml2json.xml2json(result.data));
-        console.log(apiXmlData);
+        // const apiXmlData = this.$http.get('/api/getRTMSDataSvcRHTrade?LAWD_CD=11110&DEAL_YMD=201512')
+        //                 .then((result) => xml2json.xml2json(result.data));
+        // console.log(apiXmlData);
 
 
         // RxHttpRequest.get('http://localhost:18081//api/getLegaldongAptList?loadCode=1126010200&pageNo=1&numOfRows=5')
@@ -95,6 +108,26 @@ export default {
             )
            return x;
         },
+            // getAptListApiData() {
+    //     // 법정동 아파트 리스트 API call
+    //     this.aptList = [];
+    //     const loadCode = this.s_dong.val;
+    //     console.log('+++++ getAptListApiData loadCode : ' + loadCode);
+    //     const apiXmlData = this.$http.get('/api/getLegaldongAptList?loadCode='+loadCode+'&pageNo=1&numOfRows=50')
+    //                     .then((result) => xml.xml2json(result.data));
+    //     fromPromise(apiXmlData)
+    //     .pipe(map(x => x.response.body))
+    //     .pipe(filter(x => x['totalCount'] > 0 ))
+    //     .pipe(pluck('items'))
+    //     .pipe(pluck('item'))
+    //     .pipe(flatMap(x=> x))
+    //     .pipe(bufferCount(3))
+    //     .subscribe(res => {
+    //         this.aptList.push(res);
+    //         this.$emit('callAptListApi', this.aptList); 
+    //     });
+        
+    // },
     }
 
 }

@@ -25,30 +25,23 @@
 </template>
 
 <script>
-import { Observable, from } from 'rxjs';
-import { filter, bufferCount, map, flatMap, pluck, first } from 'rxjs/operators'
-import { fromPromise } from 'rxjs/observable/fromPromise'
-import xml from 'xml2json-light';
 import {_} from 'vue-underscore';
+import { filter } from 'rxjs/operators'
+import common from '../service/Common.js'
+import apiService from '../service/ApiService.js'
 
 export default {
   name: 'Condition',
   props: ['svcData'],
   data () {
     return {
-        s_year : null,
-        o_year: [],
-        s_month : null,
-        o_month: [],
-        s_sido : null,
-        o_sido : [],
-        s_sigungu : null,
-        o_sigungu : [],
-        s_dong : null,
-        o_dong : [],
+        s_year    : null,  o_year    : [],
+        s_month   : null,  o_month   : [],
+        s_sido    : null,  o_sido    : [],
+        s_sigungu : null,  o_sigungu : [],
+        s_dong    : null,  o_dong    : [],
         showVaildationAlert : false,
         vailidationMsg : '조회 조건을 확인하세요.',
-        aptList : [],
         tradeList : []
     }
   },
@@ -57,108 +50,65 @@ export default {
       this.initConditionSido();
       this.initConditionSigungu();
       this.initConditionDong();
-      this.$emit('callApi', false); // 아파트 목록, 아파트 거래내역 숨김
+      this.$emit('callApi', false); // 거래내역 초기화
 
   },
   methods:{
     initConditionDate() {
-        // set Year
-        const year = new Date().getFullYear();
-        from(this.generateArrayByCount(10))
-        .pipe(map(x => this.generateOptionObj(year-x, year-x)))
-        .subscribe(res => this.o_year.push(res))
-        this.s_year = {val : year, txt: year}
-
-        // set month
-        from(this.generateArrayByCount(12))
-        .pipe(map(x => this.generateOptionObj(x+1, x+1)))
-        .subscribe(res => this.o_month.push(res))
-        const mon = new Date().getMonth() + 1;
-        this.s_month = {val : mon, txt: mon}
-    },
-    generateArrayByCount(count) {
-        let array = [];
-        for(let i=0; i<count; i++)
-            array.push(i);
-        return array;
+        const date = common.initConditionDate(this.o_year, this.o_month);
+        this.s_year = date.year;
+        this.s_month = date.month;
     },
     initConditionSido() {
+        const obj = common.generateOptionObj('', '시/도');
         this.o_sido = [];
-        this.o_sido.push(this.generateOptionObj('', '시/도'));
-        this.s_sido = {val:'', txt:'시/도'};
-        this.$http.get('/api/sido')
-        .then(res => {
-            //console.log(res.data);
-            _.each(res.data, this.addConditionSido);
-        })
-        .catch(err => console.log(err)); 
+        this.o_sido.push(obj);
+        this.s_sido = obj.value;
+        apiService.getApiDataJson('/api/sido')
+        .subscribe(res => this.addConditionSido(res));
+
     },
     initConditionSigungu () {
-        // console.log(sidoCode);
+        const obj = common.generateOptionObj('', '시/군/구');
         this.o_sigungu = [];
-        this.o_sigungu.push(this.generateOptionObj('', '시/군/구'));
-        this.s_sigungu = {val:'', txt:'시/군/구'};
+        this.o_sigungu.push(obj);
+        this.s_sigungu = obj.value;
     },
     setConditionSigungu(sidoCode) {
         this.initConditionSigungu();
-        this.$http.get('/api/sigungu?sido='+sidoCode.val)
-        .then(res => {
-            // console.log(res.data);
-            _.each(res.data, this.addConditionSigungu);
-        })
+        apiService.getApiDataJson('/api/sigungu?sido='+sidoCode.val)
+        .subscribe(res => this.addConditionSigungu(res));
     },
     initConditionDong () {
+        const obj = common.generateOptionObj('', '읍/면/동');
         this.o_dong = [];
-        this.o_dong.push(this.generateOptionObj('', '읍/면/동'));
-        this.s_dong = {val:'', txt:'읍/면/동'};
+        this.o_dong.push(obj);
+        this.s_dong = obj.value;
     },
     setConditionDong(sigunguCode){
         this.initConditionDong();
-        this.$http.get('/api/dong?sigungu='+sigunguCode.val)
-        .then(res => {
-            // console.log(res.data);
-            _.each(res.data, this.addConditionDong);
-        })
-    },
-    generateOptionObj(val, text) {
-        return {value:{val : val, txt: text}, text:text};
+        apiService.getApiDataJson('/api/dong?sigungu='+sigunguCode.val)
+        .subscribe(res => this.addConditionDong(res));
     },
     addConditionSido(obj) {
-        this.o_sido.push(this.generateOptionObj(obj.code, obj.sido))
+        this.o_sido.push(common.generateOptionObj(obj.code, obj.sido))
     },
     addConditionSigungu(obj) {
-        this.o_sigungu.push(this.generateOptionObj(obj.code, obj.sigun))
+        this.o_sigungu.push(common.generateOptionObj(obj.code, obj.sigun))
     },
     addConditionDong(obj) {
-        this.o_dong.push(this.generateOptionObj(obj.code, obj.dong))
-    },
-    vailidation() {
-        let msg;
-        let hasError = false;
-        if(! this.s_sido.val){
-            msg = '(시/도)를 선택하세요';
-            hasError = true;
-        }else if(! this.s_sigungu.val){
-            msg = '(시/군/구)를 선택하세요';
-            hasError = true;
-        }else if(! this.s_dong.val){
-            msg = '(읍/면/동)을 선택하세요';
-            hasError = true;
-        }
-
-        this.vailidationMsg = msg;
-        return hasError;
+        this.o_dong.push(common.generateOptionObj(obj.code, obj.dong))
     },
     callApi () {
          // vailidation check
-        this.showVaildationAlert = this.vailidation();
+        let result = common.vailidation(this.s_sido.val, this.s_sigungu.val, this.s_dong.val);
+        this.showVaildationAlert = result.hasError;
+        this.vailidationMsg = result.msg;
         this.$emit('callApi', !this.showVaildationAlert);
 
-        this.aptList = [],
         this.tradeList = []
         if( !this.showVaildationAlert ){
             if(this.svcData.value === 'Apt'){
-                // this.getAptListApiData(); // 데이터 별로임.. 안쓰는게 날 듯
                 this.getTradeAptListApiData();
             }else if(this.svcData.value === 'Multi'){
                 this.getTradeMultiListApiData();
@@ -167,41 +117,11 @@ export default {
             }
         }
     },
-    // getAptListApiData() {
-    //     // 법정동 아파트 리스트 API call
-    //     this.aptList = [];
-    //     const loadCode = this.s_dong.val;
-    //     console.log('+++++ getAptListApiData loadCode : ' + loadCode);
-    //     const apiXmlData = this.$http.get('/api/getLegaldongAptList?loadCode='+loadCode+'&pageNo=1&numOfRows=50')
-    //                     .then((result) => xml.xml2json(result.data));
-    //     fromPromise(apiXmlData)
-    //     .pipe(map(x => x.response.body))
-    //     .pipe(filter(x => x['totalCount'] > 0 ))
-    //     .pipe(pluck('items'))
-    //     .pipe(pluck('item'))
-    //     .pipe(flatMap(x=> x))
-    //     .pipe(bufferCount(3))
-    //     .subscribe(res => {
-    //         this.aptList.push(res);
-    //         this.$emit('callAptListApi', this.aptList); 
-    //     });
-        
-    // },
     getTradeAptListApiData() {
         // 법정동 아파트 거래 리스트 API call
         const lawdCd = this.s_dong.val.substr(0, 5);
-        const dealYmd = this.s_year.val + this.addZero(this.s_month.val);
-        const apiXmlData = this.$http.get('/api/getRTMSDataSvcAptTrade?LAWD_CD='+lawdCd+'&DEAL_YMD='+dealYmd)
-                        .then((result) => xml.xml2json(result.data));
-        
-        fromPromise(apiXmlData)
-        .pipe(map(x => x.response.body))
-        .pipe(filter(x => x['totalCount'] > 0 ))
-        .pipe(pluck('items'))
-        .pipe(pluck('item'))
-        .pipe(map(x=> this.checkArray(x)))
-        .pipe(map(x => this.deleteField(x, ['년','지번','지역코드'])))
-        .pipe(flatMap(x=> x))
+        const dealYmd = this.s_year.val + common.addZero(this.s_month.val);
+        apiService.getApiDataXml('/api/getRTMSDataSvcAptTrade?LAWD_CD='+lawdCd+'&DEAL_YMD='+dealYmd) 
         .pipe(filter(x =>  x['법정동'] === this.s_dong.txt ))
         .subscribe(res => {
             this.tradeList.push(res);
@@ -212,18 +132,9 @@ export default {
     getTradeMultiListApiData() {
         // 법정동 연립/다세대 거래 리스트 API call
         const lawdCd = this.s_dong.val.substr(0, 5);
-        const dealYmd = this.s_year.val + this.addZero(this.s_month.val);
-        const apiXmlData = this.$http.get('/api/getRTMSDataSvcRHTrade?LAWD_CD='+lawdCd+'&DEAL_YMD='+dealYmd)
-                        .then((result) => xml.xml2json(result.data));
+        const dealYmd = this.s_year.val + common.addZero(this.s_month.val);
         
-        fromPromise(apiXmlData)
-        .pipe(map(x => x.response.body))
-        .pipe(filter(x => x['totalCount'] > 0 ))
-        .pipe(pluck('items'))
-        .pipe(pluck('item'))
-        .pipe(map(x=> this.checkArray(x)))
-        .pipe(map(x => this.deleteField(x, ['년','지번','지역코드'])))
-        .pipe(flatMap(x=> x))
+        apiService.getApiDataXml('/api/getRTMSDataSvcRHTrade?LAWD_CD='+lawdCd+'&DEAL_YMD='+dealYmd) 
         .pipe(filter(x =>  x['법정동'] === this.s_dong.txt ))
         .subscribe(res => {
             this.tradeList.push(res);
@@ -233,40 +144,16 @@ export default {
     getTradeDetachListApiData () {
         // 법정동 단독주택 거래 리스트 API call
         const lawdCd = this.s_dong.val.substr(0, 5);
-        const dealYmd = this.s_year.val + this.addZero(this.s_month.val);
-        const apiXmlData = this.$http.get('/api/getRTMSDataSvcSHTrade?LAWD_CD='+lawdCd+'&DEAL_YMD='+dealYmd)
-                        .then((result) => xml.xml2json(result.data));
+        const dealYmd = this.s_year.val + common.addZero(this.s_month.val);
         
-        fromPromise(apiXmlData)
-        .pipe(map(x => x.response.body))
-        .pipe(filter(x => x['totalCount'] > 0 ))
-        .pipe(pluck('items'))
-        .pipe(pluck('item'))
-        .pipe(map(x=> this.checkArray(x)))
-        .pipe(map(x => this.deleteField(x, ['년','지번','지역코드'])))
-        .pipe(flatMap(x=> x))
+        apiService.getApiDataXml('/api/getRTMSDataSvcSHTrade?LAWD_CD='+lawdCd+'&DEAL_YMD='+dealYmd) 
         .pipe(filter(x =>  x['법정동'] === this.s_dong.txt ))
         .subscribe(res => {
             this.tradeList.push(res);
             this.$emit('callTradeApi', this.tradeList);
         });
     },
-    checkArray (val) {
-        return (_.isArray(val)) ? val : [val];
-    },
-    addZero(val){
-        let temp = parseInt(val);
-        let result = '' + temp;
-        return result < 10 ? result = '0' + temp : result;
-    },
-    deleteField(x, del) {
-        _.each(x, (v) => {
-                _.each(del, (d) => delete v[d] )
-            }
-        )
-        return x;
-    }
-     
+
   }
   
 }
