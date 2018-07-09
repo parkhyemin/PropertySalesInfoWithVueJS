@@ -61,8 +61,7 @@ export default {
     },
     initConditionSido() {
         const obj = common.generateOptionObj('', '시/도');
-        this.o_sido = [];
-        this.o_sido.push(obj);
+        this.o_sido = [obj];
         this.s_sido = obj.value;
         apiService.getApiDataJson('/api/sido')
         .subscribe(res => this.addConditionSido(res));
@@ -70,8 +69,7 @@ export default {
     },
     initConditionSigungu () {
         const obj = common.generateOptionObj('', '시/군/구');
-        this.o_sigungu = [];
-        this.o_sigungu.push(obj);
+        this.o_sigungu = [obj];
         this.s_sigungu = obj.value;
     },
     setConditionSigungu(sidoCode) {
@@ -81,8 +79,7 @@ export default {
     },
     initConditionDong () {
         const obj = common.generateOptionObj('', '읍/면/동');
-        this.o_dong = [];
-        this.o_dong.push(obj);
+        this.o_dong = [obj];
         this.s_dong = obj.value;
     },
     setConditionDong(sigunguCode){

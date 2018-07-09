@@ -1,9 +1,9 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import Main from '@/components/Main'
-import AptMain from '@/components/apt/AptMain'
-import MultiMain from '@/components/multi/MultiMain'
-import DetachMain from '@/components/detach/DetachMain'
+import Main from '@/components/page/Main'
+import AptMain from '@/components/page/AptMain'
+import MultiMain from '@/components/page/MultiMain'
+import DetachMain from '@/components/page/DetachMain'
 import RxJsTest from '@/components/test/RxJsTest'
 
 Vue.use(Router)

@@ -13,8 +13,8 @@
 
 <script>
 import Condition from '../common/Condition';
-import AptList from './AptList';
 import TradeList from '../common/TradeList';
+import AptList from '../test/AptList';
 
 export default {
   name: 'AptMain',
