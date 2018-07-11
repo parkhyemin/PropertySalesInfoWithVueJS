@@ -16,6 +16,7 @@
     "rxjs": "^6.2.1",
     "rxjs-compat": "^6.2.1",
     "vue": "^2.5.16",
+    "vue-daum-map": "^1.0.11",
     "vue-router": "^3.0.1",
     "vue-rx": "^6.0.0",
     "vue-underscore": "^0.1.4",

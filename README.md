@@ -23,11 +23,24 @@
 ===================================================================
 # 작업진행 예정
 
-- 상단 네비게이터 분리
-  메인목록 이동 기능 추가
-  
-- css 작업
-- 아파트 목록에서 아파트 클릭 시, 지도 API 사용하여 마크 표시(보류)
+- 거래된 목록 표시(아파트, 연립/다세대)
+
+- 목록에서 아파트 클릭 시, 지도 API 사용하여 마크 표시
+
+- 주소로 x,y좌표를 가져오는 작업 (다음카카오API)
+  > (단독/다가구는 제외 - 아파트, 연립/다세대만 가능함)
+
+
+
+- 토지, 오피스텔, 분양권 실거래 조회 작업(보류)
+
+  > 오피스텔 : http://openapi.molit.go.kr/OpenAPI_ToolInstallPackage/service/rest/RTMSOBJSvc/getRTMSDataSvcOffiTrade
+  > 토지 : http://openapi.molit.go.kr/OpenAPI_ToolInstallPackage/service/rest/RTMSOBJSvc/getRTMSDataSvcLandTrade
+
+
+
+
+
 
 
 
@@ -40,17 +53,18 @@
 - 법정동 데이터 정리 (시/도, 시/군/구, 읍/면/동)
 - STS DevTools 라이브러리 반영(Hot reload 기능)
 - 조건 컴포넌트 분리(년, 월, 시/군 등)
-- 법정동 코드기준 아파트 목록 API 구현
+- 법정동 코드기준 아파트 목록 API 구현(실거래내역 데이터 성격과 맞지 않아 제외)
 - 법정동 코드기준 아파트 실거래 목록 API 구현
 - 검색, 아파트목록, 거래목록 콤포넌트 분리 작업
-- vue-rx 설치 후, 소스 전체적으로 변경(Observable)
+- vue-rx 설치 후, 소스 전체적으로 변경(Observable) RxJS
 - 법정동 코드로 아파트 실거래 필터 걸도록 작업
   구단위로만 데이터 제공하고 있음
   https://www.data.go.kr/information/QNA_0000000000016947/qna.do
 - Proxy 설정 : /config/index.js
-- 연립/다세대, 단독주택 작업
-- Promise -> Observable
+- 연립/다세대, 단독주택 API 작업
+- API 응답 데이터 타입 변경 Promise -> Observable
 - 공통함수, API 서비스 생성 및 분리
+- 네비게이션 컴포넌트
 
 
 
@@ -100,6 +114,11 @@ npm install xml2json-light
   추가 모듈 설치
   npm install --save rxjs-compat
 
+# vue-daum-map 설치
+참고 : https://www.npmjs.com/package/vue-daum-map
+ npm i vue-daum-map
+
+
 ===================================================================
 
 # 참고사이트
@@ -132,4 +151,18 @@ https://kr.vuejs.org/v2/guide/
 
  법정동
  http://apis.data.go.kr/1611000/AptListService/getLegaldongAptList?ServiceKey=AI9qcEoaK35mGSnhjGyfzEBVkfoS14LZFAn7BgBQbI5FwHzxJe1%2BNwPz0GcB%2F0JsMXpFLic28nDyRorftIW8yg%3D%3D&loadCode=1126010200&pageNo=1&numOfRows=10
+
+# 도로명주소 API
+http://www.juso.go.kr/addrlink/devAddrLinkRequestUse.do?menu=roadSearch#dataListRoadSearch
+
+# 주소로 X,Y 좌표 -> 카카오API 사용
+  > 참고 사이트 https://developers.kakao.com/docs/restapi/local#%EC%A3%BC%EC%86%8C-%EA%B2%80%EC%83%89
+
+  > ex)
+  https://dapi.kakao.com/v2/local/search/address.json?query=서울 상봉동 113-1
+
+  > header정보
+  [{"key":"Authorization","value":"KakaoAK 4bdbeb2a97c3db7eb425753b4acafb9e","description":""}]
+(참고 : 
+https://developers.kakao.com/docs/restapi/local#%EC%A2%8C%ED%91%9C%EA%B3%84-%EB%B3%80%ED%99%98)
 

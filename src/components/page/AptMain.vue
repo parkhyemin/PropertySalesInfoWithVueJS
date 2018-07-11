@@ -1,5 +1,8 @@
 <template>
 <div>
+  <!-- 네비게이션 -->
+  <Navigation :svcData="svcData"/>
+
   <!--검색영역-->
   <Condition :svcData="svcData" @callApi="callApi" @callTradeApi="callTradeApi" />
 
@@ -12,6 +15,7 @@
 </template>
 
 <script>
+import Navigation from '../common/Navigation';
 import Condition from '../common/Condition';
 import TradeList from '../common/TradeList';
 import AptList from '../test/AptList';
@@ -19,16 +23,16 @@ import AptList from '../test/AptList';
 export default {
   name: 'AptMain',
   components: { 
-        Condition, AptList, TradeList
-    },
+    Navigation, Condition, AptList, TradeList
+  },
   data () {
     return {
-      svcData: {value:'Apt', text:'아파트'},
-      isCallApi : false, /* API 호출 전, 검색조건 validation */
-      aptListData : [],
+      svcData       : 'Apt',
+      isCallApi     : false, /* API 호출 전, 검색조건 validation */
+      aptListData   : [],
       tradeListData : [],
-      totalCount : 0,
-      emptyList:[{'조회된 거래내역이 없습니다.':' '}]
+      totalCount    : 0,
+      emptyList     : [{'조회된 거래내역이 없습니다.':' '}]
     }
   },
   methods:{

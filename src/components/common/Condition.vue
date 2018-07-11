@@ -1,25 +1,22 @@
 <template>
 <div>
   <b-container fluid>
-    <b-row class="mb-3"><h4>실거래가-{{svcData.text}}</h4></b-row>
+    <b-row class="ml-1"><p>실거래가</p></b-row>
     <b-row class="mb-3">
       <b-col><b-form-select v-model="s_year" :options="o_year" /></b-col>
       <b-col><b-form-select v-model="s_month" :options="o_month" /></b-col>
-      <b-col><b-form-select v-model="s_sido" :options="o_sido" @change="setConditionSigungu($event)" ref="el_sido"/></b-col>
+      <b-col><b-form-select v-model="s_sido" :options="o_sido" @change="setConditionSigungu($event)"/></b-col>
     </b-row>
     <b-row class="mb-3">
-      <b-col><b-form-select v-model="s_sigungu" :options="o_sigungu" @change="setConditionDong($event)" ref="el_sigungu"/></b-col>
+      <b-col><b-form-select v-model="s_sigungu" :options="o_sigungu" @change="setConditionDong($event)"/></b-col>
       <b-col>
         <b-input-group>
-            <b-form-select v-model="s_dong" :options="o_dong" ref="el_dong"/>
+            <b-form-select v-model="s_dong" :options="o_dong" ref="el_dong" class="mr-2"/>
             <b-btn variant="primary" @click="callApi" >조회</b-btn>
         </b-input-group>
       </b-col>
     </b-row>
-    <b-alert variant="danger"
-             :show="showVaildationAlert">
-      {{vailidationMsg}}
-    </b-alert>
+    <b-alert variant="danger" :show="showAlert">{{errorMsg}}</b-alert>
   </b-container>
 </div>
 </template>
@@ -40,8 +37,8 @@ export default {
         s_sido    : null,  o_sido    : [],
         s_sigungu : null,  o_sigungu : [],
         s_dong    : null,  o_dong    : [],
-        showVaildationAlert : false,
-        vailidationMsg : '조회 조건을 확인하세요.',
+        showAlert : false,
+        errorMsg  : '조회 조건을 확인하세요.',
         tradeList : []
     }
   },
@@ -55,9 +52,9 @@ export default {
   },
   methods:{
     initConditionDate() {
-        const date = common.initConditionDate(this.o_year, this.o_month);
-        this.s_year = date.year;
-        this.s_month = date.month;
+        const {year, month} = common.initConditionDate(this.o_year, this.o_month);
+        this.s_year = year;
+        this.s_month = month;
     },
     initConditionSido() {
         const obj = common.generateOptionObj('', '시/도');
@@ -98,18 +95,18 @@ export default {
     },
     callApi () {
          // vailidation check
-        let result = common.vailidation(this.s_sido.val, this.s_sigungu.val, this.s_dong.val);
-        this.showVaildationAlert = result.hasError;
-        this.vailidationMsg = result.msg;
-        this.$emit('callApi', !this.showVaildationAlert);
+        let {msg, hasError} = common.vailidation(this.s_sido.val, this.s_sigungu.val, this.s_dong.val);
+        this.showAlert = hasError;
+        this.errorMsg  = msg;
+        this.$emit('callApi', !this.showAlert);
 
         this.tradeList = []
-        if( !this.showVaildationAlert ){
-            if(this.svcData.value === 'Apt'){
+        if( !this.showAlert ){
+            if(this.svcData === 'Apt'){
                 this.getTradeAptListApiData();
-            }else if(this.svcData.value === 'Multi'){
+            }else if(this.svcData === 'Multi'){
                 this.getTradeMultiListApiData();
-            }else if(this.svcData.value === 'Detach'){
+            }else if(this.svcData === 'Detach'){
                 this.getTradeDetachListApiData();
             }
         }
@@ -158,4 +155,5 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+    p { font-size : 18px;}
 </style>

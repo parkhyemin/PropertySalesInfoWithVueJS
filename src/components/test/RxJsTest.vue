@@ -1,15 +1,24 @@
 <template>
-  <ul>
-    <li v-for="(m, index) in msg" :key="'m_'+index">
+    <!--<li v-for="(m, index) in msg" :key="'m_'+index">
         <span v-for="(a, index) in m" :key="'a_'+index">{{a}} </span>
     </li>
      <li v-for="(d, index) in data" :key="'dm_'+index">
         <span >{{d}} </span>
-    </li>
-  </ul>
-
- 
-   
+    </li>-->
+    <!--<button @click="sum(1,2)">1+2는?</button>-->
+    <!--<b-tabs>
+        <b-tab title="first" href="Apt" active>
+            <br>I'm the first fading tab
+        </b-tab>
+        <b-tab title="second" href="Multi" >
+            <br>I'm the second tab content
+        </b-tab>
+        <b-tab title="third">
+            <br>I'm the third tab content
+        </b-tab>
+    </b-tabs>-->
+    <DaumMap />
+    
 
 </template>
 
@@ -20,29 +29,35 @@ import { fromPromise } from 'rxjs/observable/fromPromise'
 import {_} from 'vue-underscore';
 import {RxHttpRequest} from 'rx-http-request';
 import xml2json from 'xml2json-light';
+import DaumMap from '../common/DaumMap';
 
 import TestService from '../service/TestService.js'
 
 
 export default {
     name: 'RxjsTest',
+    components: { 
+        DaumMap
+    },
     data () {
         return {
             msg: [],
-            data : []
+            data : [],
+            tab: 'Detach'
         }
     },
     mounted() {
+
         // Custom 컴포넌트 테스트
         // console.log(TestService);
-        let s$ = TestService.getApiData();
-        s$
-        .pipe(filter(x =>  x['법정동'] === '평창동' ))
-        .subscribe(res => {
-            // this.tradeList.push(res);
-            // this.$emit('callTradeApi', this.tradeList);
-            console.log(res);
-        });
+        // let s$ = TestService.getApiData();
+        // s$
+        // .pipe(filter(x =>  x['법정동'] === '평창동' ))
+        // .subscribe(res => {
+        //     // this.tradeList.push(res);
+        //     // this.$emit('callTradeApi', this.tradeList);
+        //     console.log(res);
+        // });
         
         
         // Proxy 테스트
@@ -102,6 +117,10 @@ export default {
         
     },
     methods : {
+        sum (a, b) {
+            const result = a + b;
+            return result
+        },
         pluckByKeyArray(x, param) {
             _.each(x, (v) => 
                 _.each(param, (p) => v[p] = _.first(v[p]) )

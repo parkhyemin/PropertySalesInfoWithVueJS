@@ -1,25 +1,29 @@
 <template>
 <div>
+  <!-- 네비게이션 -->
+  <Navigation :svcData="svcData"/>
+  
   <!--검색영역-->
   <Condition :svcData="svcData" @callApi="callApi" @callTradeApi="callTradeApi" />
 
-  <!-- 다세대/연립 거래내역 리스트 -->
+  <!-- 단독/다가구 거래내역 리스트 -->
   <TradeList v-if="isCallApi" :tradeListData="tradeListData" />
 </div>
 </template>
 
 <script>
+import Navigation from '../common/Navigation';
 import Condition from '../common/Condition';
 import TradeList from '../common/TradeList';
 
 export default {
   name: 'DetachMain',
   components: { 
-        Condition, TradeList
-    },
+    Navigation, Condition, TradeList
+  },
   data () {
     return {
-      svcData: {value:'Detach', text:'단독/다가구'},
+      svcData: 'Detach',
       isCallApi : false, /* API 호출 전, 검색조건 validation */
       tradeListData : []
     }
