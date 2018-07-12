@@ -4,7 +4,7 @@
   <Navigation :svcData="svcData"/>
   
   <!--검색영역-->
-  <Condition :svcData="svcData" @callApi="callApi" @callTradeApi="callTradeApi" />
+  <Condition :svcData="svcData" :feildData="feildData" @callApi="callApi" @callTradeApi="callTradeApi" />
 
   <!-- 지역 정보-->
   <MapList v-if="isValidation" :showMap="showMap" :uniqListData="uniqListData" :feildData="feildData" @showFilterData="showFilterData" />
@@ -22,6 +22,8 @@ import MapList from '../common/MapList';
 
 import { from } from 'rxjs';
 import { tap, bufferCount, filter } from 'rxjs/operators'
+
+import {_} from 'vue-underscore';
 
 export default {
   name: 'DetachMain',
@@ -50,7 +52,7 @@ export default {
     },
     callTradeApi(tradeList, uniqList){
       // 거래된 아파트 정보(group by 아파트명)
-      from(uniqList)
+      from(_.sortBy(uniqList, this.feildData))
       .pipe(
         tap(() => {
             // 초기화
@@ -61,6 +63,7 @@ export default {
         bufferCount(3)  // 하나의 row에 3개의 아이템을 뿌려주기 위해
       )
       .subscribe(res => {
+        this.showMap = true;
         this.uniqListData.push(res);
       });
       
@@ -76,7 +79,6 @@ export default {
         filter(x => x[this.feildData] === item[this.feildData] )
       )
       .subscribe(res => {
-        this.showMap = true;
         this.isSelectedItem = true;
         this.tradeFilterData.push(res);
       })

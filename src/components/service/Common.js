@@ -1,6 +1,6 @@
 import {_} from 'vue-underscore';
 import { from } from 'rxjs';
-import { map } from 'rxjs/operators'
+import { map, tap } from 'rxjs/operators'
 
 export default {
     initConditionDate(arr_year, arr_month) {
@@ -12,11 +12,13 @@ export default {
         const c_year = {val : year, txt: year};
     
         // set month
+        arr_month.push(this.generateOptionObj('', '전체'));
         from(this.generateArrayByCount(12))
         .pipe(map(x => this.generateOptionObj(x+1, x+1)))
         .subscribe(res => arr_month.push(res));
         const mon = new Date().getMonth() + 1;
-        const c_month = {val : mon, txt: mon};
+        // const c_month = {val : mon, txt: mon};
+        const c_month = {val : '', txt: '전체'};
 
         return {year : c_year, month : c_month}
     },
@@ -48,6 +50,9 @@ export default {
         return (_.isArray(val)) ? val : [val];
     },
     addZero(val){
+        if(!val)
+            return '';
+            
         let temp = parseInt(val);
         let result = '' + temp;
         return result < 10 ? result = '0' + temp : result;
@@ -59,5 +64,11 @@ export default {
         )
         return x;
     },
+    uniqTradeList(v, feildName) {
+        return _.map(_.groupBy(v, (obj) => obj[feildName]), _.first);
+    },
+    filterDong(v, txt) {
+        return _.filter(v, (obj) => obj['법정동'] === txt )
+    }
     
 }

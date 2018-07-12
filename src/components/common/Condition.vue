@@ -29,7 +29,7 @@ import apiService from '../service/ApiService.js'
 
 export default {
   name: 'Condition',
-  props: ['svcData'],
+  props: ['svcData','feildData'],
   data () {
     return {
         s_year    : null,  o_year    : [],
@@ -114,30 +114,25 @@ export default {
     },
     getTradeAptListApiData() {
         // 법정동 아파트 거래 리스트 API call
-        const lawdCd = this.s_dong.val.substr(0, 5);
-        const dealYmd = this.s_year.val + common.addZero(this.s_month.val);
-        apiService.getApiDataXml('/api/getRTMSDataSvcAptTrade?LAWD_CD='+lawdCd+'&DEAL_YMD='+dealYmd)
+        const { LAWD_CD, DEAL_YMD} = this.getSelectedCondition();
+        apiService.getMergeData('/api/getRTMSDataSvcAptTrade', LAWD_CD, DEAL_YMD)
         .pipe(
-            map(x=> this.filterDong(x)),
-            tap(val => this.uniqList = this.uniqTradeList(val)),            
+            map(x=> common.filterDong(x, this.s_dong.txt)),
+            tap(val => this.uniqList = common.uniqTradeList(val, this.feildData)),            
         )
         .subscribe(res => {
             this.tradeList= res;
             this.$emit('callTradeApi', this.tradeList, this.uniqList);
         });
 
-
-
     },
     getTradeMultiListApiData() {
         // 법정동 연립/다세대 거래 리스트 API call
-        const lawdCd = this.s_dong.val.substr(0, 5);
-        const dealYmd = this.s_year.val + common.addZero(this.s_month.val);
-        
-        apiService.getApiDataXml('/api/getRTMSDataSvcRHTrade?LAWD_CD='+lawdCd+'&DEAL_YMD='+dealYmd) 
+        const { LAWD_CD, DEAL_YMD} = this.getSelectedCondition();
+        apiService.getMergeData('/api/getRTMSDataSvcRHTrade', LAWD_CD, DEAL_YMD) 
         .pipe(
-            map(x=> this.filterDong(x)),
-            tap(val => this.uniqList = this.uniqTradeList(val)),            
+            map(x=> common.filterDong(x, this.s_dong.txt)),
+            tap(val => this.uniqList = common.uniqTradeList(val, this.feildData)),            
         )
         .subscribe(res => {
             this.tradeList = res;
@@ -147,26 +142,23 @@ export default {
     }, 
     getTradeDetachListApiData () {
         // 법정동 단독주택 거래 리스트 API call
-        const lawdCd = this.s_dong.val.substr(0, 5);
-        const dealYmd = this.s_year.val + common.addZero(this.s_month.val);
-        
-        apiService.getApiDataXml('/api/getRTMSDataSvcSHTrade?LAWD_CD='+lawdCd+'&DEAL_YMD='+dealYmd) 
+        const { LAWD_CD, DEAL_YMD} = this.getSelectedCondition();
+        apiService.getMergeData('/api/getRTMSDataSvcSHTrade', LAWD_CD, DEAL_YMD) 
         .pipe(
-            map(x=> this.filterDong(x)),
-            tap(val => this.uniqList = this.uniqTradeList(val)),            
+            map(x=> common.filterDong(x, this.s_dong.txt)),
+            tap(val => this.uniqList = common.uniqTradeList(val, this.feildData)),            
         )
         .subscribe(res => {
             this.tradeList = res;
             this.$emit('callTradeApi', this.tradeList, this.uniqList);
         });
     },
-    uniqTradeList(v) {
-        return _.map(_.groupBy(v, (obj) => obj['아파트']), _.first);
-    },
-    filterDong(v) {
-        return _.filter(v, (obj) => obj['법정동'] === this.s_dong.txt )
+    getSelectedCondition() {
+        const lawdCd = this.s_dong.val.substr(0, 5);
+        const dealYmd = this.s_year.val + common.addZero(this.s_month.val);
+        return {LAWD_CD : lawdCd, DEAL_YMD : dealYmd}
     }
-
+    
   }
   
 }

@@ -23,7 +23,8 @@ export default {
     },
   data () {
     return {
-
+      center : null,
+      markerList : []
     }
   },
   methods:{
@@ -32,8 +33,9 @@ export default {
     }
   },
   mounted() {
-    
-  }
+     console.log('mounted+++++++++++++')
+  },
+ 
 
 }
 </script>

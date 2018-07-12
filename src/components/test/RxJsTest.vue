@@ -17,20 +17,23 @@
             <br>I'm the third tab content
         </b-tab>
     </b-tabs>-->
-    <DaumMap />
+    <!--<DaumMap />-->
     
 
 </template>
 
 <script>
 import { Observable, from } from 'rxjs';
-import { bufferCount, map, flatMap, pluck, first, filter } from 'rxjs/operators'
+import { bufferCount, map, flatMap, pluck, first, toArray, filter } from 'rxjs/operators'
 import { fromPromise } from 'rxjs/observable/fromPromise'
+import { merge } from 'rxjs/observable/merge'
+
 import {_} from 'vue-underscore';
 import {RxHttpRequest} from 'rx-http-request';
 import xml2json from 'xml2json-light';
 import DaumMap from '../common/DaumMap';
 
+import apiService from '../service/ApiService.js'
 import TestService from '../service/TestService.js'
 
 
@@ -47,6 +50,23 @@ export default {
         }
     },
     mounted() {
+        // 다중 Observable 연결 테스트
+        const s1$ = apiService.getApiDataXml('/api/getRTMSDataSvcAptTrade?LAWD_CD=11110&DEAL_YMD=201511');
+        const s2$ = apiService.getApiDataXml('/api/getRTMSDataSvcAptTrade?LAWD_CD=11110&DEAL_YMD=201512');
+        // console.log(s1$);
+        // console.log(s2$);
+        // s1$.subscribe(res => console.log(res));
+        // s2$.subscribe(res => console.log(res));
+
+        const s3$ = merge(s1$, s2$);
+        s3$
+        .pipe(
+            flatMap(x => x),
+            toArray()
+        )
+        .subscribe(res => console.log(res));
+
+        
 
         // Custom 컴포넌트 테스트
         // console.log(TestService);
