@@ -75,11 +75,11 @@ export default {
         makeClickListener(map, marker, infowindow){
             const that = this;
             return function() {
-                 // 이전 인포윈도우를 전부 닫습니다
-                 for(let i=0; i<that.infowindows.length; i++){
-                     that.infowindows[i].close()
-                 }
-                 // 마커 위에 인포윈도우를 표시합니다
+                // 이전 인포윈도우를 전부 닫습니다
+                for(let i=0; i<that.infowindows.length; i++){
+                    that.infowindows[i].close()
+                }
+                // 마커 위에 인포윈도우를 표시합니다
                 infowindow.open(map, marker);
                 that.infowindows.push(infowindow);  
             }

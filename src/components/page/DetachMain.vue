@@ -7,7 +7,7 @@
   <Condition :svcData="svcData" @callApi="callApi" @callTradeApi="callTradeApi" />
 
   <!-- 단독/다가구 거래내역 리스트 -->
-  <TradeList v-if="isCallApi" :tradeListData="tradeListData" />
+  <TradeList v-if="isValidation" :tradeListData="tradeListData" />
 </div>
 </template>
 
@@ -24,14 +24,14 @@ export default {
   data () {
     return {
       svcData: 'Detach',
-      isCallApi : false, /* API 호출 전, 검색조건 validation */
+      isValidation : false, /* 검색조건 validation */
       tradeListData : []
     }
   },
   methods:{
     callApi(result){
-      this.tradeListData = [{'':'조회된 내용이 없습니다'}];
-      this.isCallApi = result;
+      this.tradeListData = [];
+      this.isValidation = result;
     },
     callTradeApi(tradeList){
       this.tradeListData = tradeList;

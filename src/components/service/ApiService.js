@@ -12,18 +12,21 @@ export default {
                         .then((result) => xml.xml2json(result.data));
         
         return  fromPromise(apiXmlData)
-                .pipe(map(x => x.response.body))
-                .pipe(filter(x => x['totalCount'] > 0 ))
-                .pipe(pluck('items'))
-                .pipe(pluck('item'))
-                .pipe(map(x=> common.checkArray(x)))
-                .pipe(map(x => common.deleteField(x, ['년','지번','지역코드'])))
-                .pipe(flatMap(x=> x));
+                .pipe(
+                    map(x => x.response.body),
+                    filter(x => x['totalCount'] > 0 ),
+                    pluck('items'),
+                    pluck('item'),
+                    map(x=> common.checkArray(x)),
+                    map(x => common.deleteField(x, ['년','지역코드']))
+                );
     },
     getApiDataJson(url) {
         const apiJsonData = axios.get(url).then()
         return  fromPromise(apiJsonData)
-                .pipe(map(x => x.data))
-                .pipe(flatMap(x=>x));
+                .pipe(
+                    map(x => x.data),
+                    flatMap(x=>x)
+                );
     }
 }

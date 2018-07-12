@@ -23,7 +23,7 @@
 
 <script>
 import {_} from 'vue-underscore';
-import { filter } from 'rxjs/operators'
+import { filter, flatMap, tap, map, first } from 'rxjs/operators'
 import common from '../service/Common.js'
 import apiService from '../service/ApiService.js'
 
@@ -39,7 +39,8 @@ export default {
         s_dong    : null,  o_dong    : [],
         showAlert : false,
         errorMsg  : '조회 조건을 확인하세요.',
-        tradeList : []
+        tradeList : [],
+        TEMPLIST : []
     }
   },
   mounted() {
@@ -115,12 +116,17 @@ export default {
         // 법정동 아파트 거래 리스트 API call
         const lawdCd = this.s_dong.val.substr(0, 5);
         const dealYmd = this.s_year.val + common.addZero(this.s_month.val);
-        apiService.getApiDataXml('/api/getRTMSDataSvcAptTrade?LAWD_CD='+lawdCd+'&DEAL_YMD='+dealYmd) 
-        .pipe(filter(x =>  x['법정동'] === this.s_dong.txt ))
+        apiService.getApiDataXml('/api/getRTMSDataSvcAptTrade?LAWD_CD='+lawdCd+'&DEAL_YMD='+dealYmd)
+        .pipe(
+            map(x=> this.filterDong(x)),
+            tap(val => this.uniqList = this.uniqTradeList(val)),            
+        )
         .subscribe(res => {
-            this.tradeList.push(res);
-            this.$emit('callTradeApi', this.tradeList);
+            this.tradeList= res;
+            this.$emit('callTradeApi', this.tradeList, this.uniqList);
         });
+
+
 
     },
     getTradeMultiListApiData() {
@@ -129,11 +135,15 @@ export default {
         const dealYmd = this.s_year.val + common.addZero(this.s_month.val);
         
         apiService.getApiDataXml('/api/getRTMSDataSvcRHTrade?LAWD_CD='+lawdCd+'&DEAL_YMD='+dealYmd) 
-        .pipe(filter(x =>  x['법정동'] === this.s_dong.txt ))
+        .pipe(
+            map(x=> this.filterDong(x)),
+            tap(val => this.uniqList = this.uniqTradeList(val)),            
+        )
         .subscribe(res => {
-            this.tradeList.push(res);
-            this.$emit('callTradeApi', this.tradeList);
+            this.tradeList = res;
+            this.$emit('callTradeApi', this.tradeList, this.uniqList);
         });
+        
     }, 
     getTradeDetachListApiData () {
         // 법정동 단독주택 거래 리스트 API call
@@ -141,12 +151,21 @@ export default {
         const dealYmd = this.s_year.val + common.addZero(this.s_month.val);
         
         apiService.getApiDataXml('/api/getRTMSDataSvcSHTrade?LAWD_CD='+lawdCd+'&DEAL_YMD='+dealYmd) 
-        .pipe(filter(x =>  x['법정동'] === this.s_dong.txt ))
+        .pipe(
+            map(x=> this.filterDong(x)),
+            tap(val => this.uniqList = this.uniqTradeList(val)),            
+        )
         .subscribe(res => {
-            this.tradeList.push(res);
-            this.$emit('callTradeApi', this.tradeList);
+            this.tradeList = res;
+            this.$emit('callTradeApi', this.tradeList, this.uniqList);
         });
     },
+    uniqTradeList(v) {
+        return _.map(_.groupBy(v, (obj) => obj['아파트']), _.first);
+    },
+    filterDong(v) {
+        return _.filter(v, (obj) => obj['법정동'] === this.s_dong.txt )
+    }
 
   }
   

@@ -1,7 +1,8 @@
 <template>
   <b-container fluid>
-    <b-row v-for="(aptArr, index) in aptListData" :key="'apt_'+index">
-      <b-col v-for="(apt, index) in aptArr" :key="index">{{apt.kaptName}}</b-col>
+    <b-row v-for="(data, index) in uniqListData" :key="'o_'+index">
+      <b-col>{{data}}</b-col>
+      <!--<b-col v-for="(apt, index) in aptArr" :key="index">{{apt.kaptName}}</b-col>-->
     </b-row>
   </b-container>
 </template>
@@ -10,7 +11,7 @@
 
 export default {
   name: 'AptList',
-  props: ['aptListData'],
+  props: ['uniqListData'],
   components: { 
         
     },
@@ -23,8 +24,9 @@ export default {
     
   },
   mounted() {
-    
+
   }
+
 }
 </script>
 
