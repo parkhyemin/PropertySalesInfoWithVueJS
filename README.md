@@ -105,14 +105,14 @@ npm install xml2json-light
 # Underscore 적용
  참고 : https://www.npmjs.com/package/vue-underscore
 
-  // npm install vue-underscore
-  (main.js)
-  import underscore from 'vue-underscore';
-  Vue.use(underscore);
+    // npm install vue-underscore
+    (main.js)
+    import underscore from 'vue-underscore';
+    Vue.use(underscore);
  
-  new Vue({
-    ...App
-  }).$mount('#app');
+    new Vue({
+      ...App
+    }).$mount('#app');
 
 # RxJS(vue-rx) 적용
   참고 : https://github.com/vuejs/vue-rx
