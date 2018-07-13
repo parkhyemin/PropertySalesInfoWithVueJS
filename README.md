@@ -23,7 +23,13 @@
 ===================================================================
 # 작업진행 예정
 
-- 마커 클릭 시, 거래목록 클릭한 것 처럼 거래내역 보여주기
+- 다음지도 늦게 뜨는 것 개선
+
+
+
+- 전체적 소스 점검
+  > Common.js initConditionDate 함수 RxJS의 Range 함수로 변경
+
 
 - 토지, 오피스텔, 분양권 실거래 조회 작업(보류)
 
@@ -64,6 +70,9 @@
 - 아파트목록 or 연립/다세대 목록 클릭 시 필터 작업
 - 다음지도 API이용하여 동, 번지수로 x,y 좌표 구하기
 - 다음지도 x,y 좌표로 마크 표시
+- 다음지도 마커의 Infowindow 클릭 시, 거래목록 클릭한 것 처럼 거래내역 보여주기(fromEvent 사용)
+- 아파트목록 or 연립다세대 or InfoWindow 클릭 시, 포커스 이동
+
 
 
 
@@ -117,6 +126,12 @@ npm install xml2json-light
 참고 : https://www.npmjs.com/package/vue-daum-map
  npm i vue-daum-map
 
+# vue-focus 설치 
+목적 : 목록 조회시 실거래 리스트로 포커스이동
+참고 : https://www.npmjs.com/package/vue-focus
+
+
+
 
 ===================================================================
 
@@ -151,10 +166,10 @@ https://kr.vuejs.org/v2/guide/
  법정동
  http://apis.data.go.kr/1611000/AptListService/getLegaldongAptList?ServiceKey=AI9qcEoaK35mGSnhjGyfzEBVkfoS14LZFAn7BgBQbI5FwHzxJe1%2BNwPz0GcB%2F0JsMXpFLic28nDyRorftIW8yg%3D%3D&loadCode=1126010200&pageNo=1&numOfRows=10
 
-# 도로명주소 API
+# 도로명주소 API(사용x)
 http://www.juso.go.kr/addrlink/devAddrLinkRequestUse.do?menu=roadSearch#dataListRoadSearch
 
-# 주소로 X,Y 좌표 -> 카카오API 사용
+# 주소로 X,Y 좌표 -> 카카오API 사용 (동+지번으로 좌표구할 수 있음)
   > 참고 사이트 https://developers.kakao.com/docs/restapi/local#%EC%A3%BC%EC%86%8C-%EA%B2%80%EC%83%89
 
   > ex)

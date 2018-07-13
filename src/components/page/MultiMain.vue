@@ -10,7 +10,7 @@
   <AddressList v-if="isValidation" :addressData="addressData" :feildData="feildData" @showFilterData="showFilterData" />
 
   <!-- 다음 맵 -->
-  <DaumMap v-if="showMap" :mapCenter="mapCenter" :mapMarkerList="mapMarkerList" />
+  <DaumMap v-if="showMap" :mapCenter="mapCenter" :mapMarkerList="mapMarkerList" :feildData="feildData" @showFilterData="showFilterData"/>
 
   <!-- 다세대/연립 거래내역 -->
   <TradeList v-if="isValidation && isSelectedItem" :tradeListData="tradeFilterData" />
@@ -46,7 +46,7 @@ export default {
       tradeFilterData : [],         /* 연립/다세대 선택 후, 필터링된 데이터 */
       curDong         : {},         /* 검색조건에서 선택된 동 정보 */
       mapCenter       : {},         /* 다음맵 초기 경도 정보 */
-      mapMarkerList   : []          /* 다음맵 거래된 아파트 마커 정보 */
+      mapMarkerList   : [],         /* 다음맵 거래된 연립/다세대 마커 정보 */
     }
   },
   methods:{
@@ -76,13 +76,13 @@ export default {
       // 거래 내역 전체 리스트
       this.tradeListData = tradeList;
     },
-    showFilterData(item) {
+    showFilterData(itemNm) {
       this.isSelectedItem = true;
       let list = Object.assign([], this.tradeListData);
       this.tradeFilterData = [];
       from(list)
       .pipe(
-        filter(x => x[this.feildData] === item[this.feildData] )
+        filter(x => x[this.feildData] === itemNm )
       )
       .subscribe(res => {
         this.isSelectedItem = true;

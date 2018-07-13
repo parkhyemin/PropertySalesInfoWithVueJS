@@ -23,8 +23,9 @@ export default {
         
         return  fromPromise(apiXmlData)
                 .pipe(
+                    filter(x=> x.response.header.resultCode === '00'),
+                    filter(x => x.response.body.totalCount > 0 ),
                     map(x => x.response.body),
-                    filter(x => x['totalCount'] > 0 ),
                     pluck('items'),
                     pluck('item'),
                     map(x=> common.checkArray(x)),
@@ -69,7 +70,7 @@ export default {
         return merge$;
     },
     getApiDataLocation(url, fieldNm) {
-        // url = '/api/getAddress?query=상봉동'
+        // url = '/api/getAddress?query=상봉동 495'
         const apiJsonData = axios.get(url).then()
         return  fromPromise(apiJsonData)
                 .pipe(

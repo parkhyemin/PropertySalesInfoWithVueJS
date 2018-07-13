@@ -24,11 +24,11 @@ export default {
   },
   methods:{
     clickItem(item) {
-      this.$emit('showFilterData', item);
+      this.$emit('showFilterData', item[this.feildData]);
     }
   },
   mounted() {
-     console.log('mounted+++++++++++++')
+
   },
  
 
