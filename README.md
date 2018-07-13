@@ -104,6 +104,7 @@ npm install xml2json-light
 
 # Underscore 적용
  참고 : https://www.npmjs.com/package/vue-underscore
+
   // npm install vue-underscore
   (main.js)
   import underscore from 'vue-underscore';
@@ -115,6 +116,7 @@ npm install xml2json-light
 
 # RxJS(vue-rx) 적용
   참고 : https://github.com/vuejs/vue-rx
+
   // npm install vue-rx rxjs --save
   (main.js)
   import Vue from 'vue';
