@@ -117,19 +117,19 @@ npm install xml2json-light
 # RxJS(vue-rx) 적용
   참고 : https://github.com/vuejs/vue-rx
 
-  // npm install vue-rx rxjs --save
-  (main.js)
-  import Vue from 'vue';
-  import VueRx from 'vue-rx';
+    // npm install vue-rx rxjs --save
+    (main.js)
+    import Vue from 'vue';
+    import VueRx from 'vue-rx';
 
-  Vue.use(VueRx)
+    Vue.use(VueRx)
 
   추가 모듈 설치
   npm install --save rxjs-compat
 
 # vue-daum-map 설치
 참고 : https://www.npmjs.com/package/vue-daum-map
- npm i vue-daum-map
+    // npm i vue-daum-map
 
 
 
