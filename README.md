@@ -25,10 +25,12 @@
 
 - 다음지도 늦게 뜨는 것 개선
 
-
-
 - 전체적 소스 점검
   > Common.js initConditionDate 함수 RxJS의 Range 함수로 변경
+
+- css 작업
+  > 매매 매물 리스트
+  > 실거래 리스트 
 
 
 - 토지, 오피스텔, 분양권 실거래 조회 작업(보류)
@@ -90,18 +92,19 @@ npm install xml2json-light
 
 # bootstrap 적용
 참고 : http://hyper-cube.io/2017/07/16/vuejs-with-bootstrap/
- npm install --save bootstrap-vue
+
+    // npm install --save bootstrap-vue
     (main.js)
     import BootstrapVue from 'bootstrap-vue';
     Vue.use(BootstrapVue);
 
-    // using style-loader
+    
     import 'bootstrap/dist/css/bootstrap.css'
     import 'bootstrap-vue/dist/bootstrap-vue.css'
 
 # Underscore 적용
  참고 : https://www.npmjs.com/package/vue-underscore
-  npm install vue-underscore
+  // npm install vue-underscore
   (main.js)
   import underscore from 'vue-underscore';
   Vue.use(underscore);
@@ -112,7 +115,7 @@ npm install xml2json-light
 
 # RxJS(vue-rx) 적용
   참고 : https://github.com/vuejs/vue-rx
-  npm install vue-rx rxjs --save
+  // npm install vue-rx rxjs --save
   (main.js)
   import Vue from 'vue';
   import VueRx from 'vue-rx';
@@ -125,11 +128,6 @@ npm install xml2json-light
 # vue-daum-map 설치
 참고 : https://www.npmjs.com/package/vue-daum-map
  npm i vue-daum-map
-
-# vue-focus 설치 
-목적 : 목록 조회시 실거래 리스트로 포커스이동
-참고 : https://www.npmjs.com/package/vue-focus
-
 
 
 
