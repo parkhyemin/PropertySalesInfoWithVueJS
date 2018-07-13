@@ -16,10 +16,11 @@ import { fromPromise } from 'rxjs/observable/fromPromise'
 export default {
     name: 'DaumMap',
     components: {VueDaumMap},
+    props:['mapCenter', 'mapMarkerList'],
     data () {
         return {
             appKey: '30d1ef4b4574a16cb688e2ddfc3be4f3', // 테스트용 appkey
-            center: {lat:37.596768819557695, lng:127.0887542996513}, // 지도의 중심 좌표(중랑구 상봉동)
+            center: {lat:37.566826005485716, lng:126.9786567859313}, // 지도의 중심 좌표(서울)
             level: 7, // 지도의 레벨(확대, 축소 정도)
             mapTypeId: VueDaumMap.MapTypeId.NORMAL, // 맵 타입
             map: null, // 지도 객체. 지도가 로드되면 할당됨
@@ -33,38 +34,28 @@ export default {
         onLoad(_map) {
             console.log('++++++++++++++onLoad Daum Map');
             this.map = _map;
-             // 마커를 표시할 위치와 title 객체 배열입니다 
-            const positions = [
-                {
-                    title: '동부아파트', 
-                    latlng: new daum.maps.LatLng(37.60236455091188, 127.0940894749209)
-                },
-                {
-                    title: '건영1', 
-                    latlng: new daum.maps.LatLng(37.60351095329343, 127.09380046680474)
-                },
-                {
-                    title: '프레미어스엠코', 
-                    latlng: new daum.maps.LatLng(37.59833435139943, 127.09162335169233)
-                },
-                {
-                    title: '주함해븐타워',
-                    latlng: new daum.maps.LatLng(37.595812681241334, 127.0853425429564)
-                }
-            ];
-            fromPromise(positions)
-            .subscribe(x => {
+
+            // center 표시
+            this.center = this.mapCenter
+
+            // console.log(this.mapMarkerList);
+            // 마커 표시
+            fromPromise(this.mapMarkerList)
+            .subscribe(res => {
                 // 마커를 생성합니다
+                const ratlng = new daum.maps.LatLng(res.address.y, res.address.x);
+                const building_name = res.title;
+
                 const marker = new daum.maps.Marker({
-                    map: this.map, // 마커를 표시할 지도
-                    position: x.latlng, // 마커를 표시할 위치
-                    title : x.title, // 마커의 타이틀, 마커에 마우스를 올리면 타이틀이 표시됩니다
+                    map: this.map,          // 마커를 표시할 지도
+                    position: ratlng,       // 마커를 표시할 위치
+                    title : building_name,  // 마커의 타이틀, 마커에 마우스를 올리면 타이틀이 표시됩니다
                     clickable : true
                 });
 
                 // 마커에 표시할 인포윈도우를 생성합니다 
                 const infowindow = new daum.maps.InfoWindow({
-                    content: `<div style="padding:5px;">${x.title}</div>`, // 인포윈도우에 표시할 내용
+                    content: `<div style="padding:5px;">${building_name}</div>`, // 인포윈도우에 표시할 내용
                     removable : true
                 });
                 // 마커에 click 이벤트를 등록합니다
@@ -83,7 +74,7 @@ export default {
                 infowindow.open(map, marker);
                 that.infowindows.push(infowindow);  
             }
-        }
+        },
 
         
     }

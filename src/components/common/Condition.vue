@@ -115,10 +115,11 @@ export default {
     getTradeAptListApiData() {
         // 법정동 아파트 거래 리스트 API call
         const { LAWD_CD, DEAL_YMD} = this.getSelectedCondition();
-        apiService.getMergeData('/api/getRTMSDataSvcAptTrade', LAWD_CD, DEAL_YMD)
+        apiService.getMergeData('/api/getRTMSDataSvcAptTrade', LAWD_CD, DEAL_YMD, this.s_dong.txt)
         .pipe(
             map(x=> common.filterDong(x, this.s_dong.txt)),
-            tap(val => this.uniqList = common.uniqTradeList(val, this.feildData)),            
+            tap(val => this.uniqList = common.uniqTradeList(val, this.feildData)),
+            tap(() => this.callKakaoAddressApi('아파트'))
         )
         .subscribe(res => {
             this.tradeList= res;
@@ -129,10 +130,11 @@ export default {
     getTradeMultiListApiData() {
         // 법정동 연립/다세대 거래 리스트 API call
         const { LAWD_CD, DEAL_YMD} = this.getSelectedCondition();
-        apiService.getMergeData('/api/getRTMSDataSvcRHTrade', LAWD_CD, DEAL_YMD) 
+        apiService.getMergeData('/api/getRTMSDataSvcRHTrade', LAWD_CD, DEAL_YMD, this.s_dong.txt) 
         .pipe(
             map(x=> common.filterDong(x, this.s_dong.txt)),
-            tap(val => this.uniqList = common.uniqTradeList(val, this.feildData)),            
+            tap(val => this.uniqList = common.uniqTradeList(val, this.feildData)),
+            tap(() => this.callKakaoAddressApi('연립다세대'))
         )
         .subscribe(res => {
             this.tradeList = res;
@@ -143,7 +145,7 @@ export default {
     getTradeDetachListApiData () {
         // 법정동 단독주택 거래 리스트 API call
         const { LAWD_CD, DEAL_YMD} = this.getSelectedCondition();
-        apiService.getMergeData('/api/getRTMSDataSvcSHTrade', LAWD_CD, DEAL_YMD) 
+        apiService.getMergeData('/api/getRTMSDataSvcSHTrade', LAWD_CD, DEAL_YMD, this.s_dong.txt) 
         .pipe(
             map(x=> common.filterDong(x, this.s_dong.txt)),
             tap(val => this.uniqList = common.uniqTradeList(val, this.feildData)),            
@@ -153,6 +155,14 @@ export default {
             this.$emit('callTradeApi', this.tradeList, this.uniqList);
         });
     },
+    callKakaoAddressApi(fieldNm) {
+        // 아파트, 연립/다세대의 x, y좌표를 얻는다 (다음지도 Marker 표시용)
+        apiService.getMergeLocationData(this.s_sido.txt, this.s_sigungu.txt, this.uniqList, fieldNm)
+        .subscribe(res => {
+            this.$emit('callKakaoApi', res)
+        });
+        
+    }, 
     getSelectedCondition() {
         const lawdCd = this.s_dong.val.substr(0, 5);
         const dealYmd = this.s_year.val + common.addZero(this.s_month.val);
@@ -166,5 +176,4 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-    p { font-size : 18px;}
 </style>

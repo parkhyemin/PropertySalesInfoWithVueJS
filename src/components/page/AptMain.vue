@@ -4,10 +4,13 @@
   <Navigation :svcData="svcData"/>
 
   <!--검색영역-->
-  <Condition :svcData="svcData" :feildData="feildData" @callApi="callApi" @callTradeApi="callTradeApi" />
+  <Condition :svcData="svcData" :feildData="feildData" @callApi="callApi" @callTradeApi="callTradeApi" @callKakaoApi="callKakaoApi"/>
 
   <!-- 지역 정보-->
-  <MapList v-if="isValidation" :showMap="showMap" :uniqListData="uniqListData" :feildData="feildData" @showFilterData="showFilterData" />
+  <AddressList v-if="isValidation" :addressData="addressData" :feildData="feildData" @showFilterData="showFilterData" />
+
+  <!-- 다음 맵 -->
+  <DaumMap v-if="showMap" :mapCenter="mapCenter" :mapMarkerList="mapMarkerList" />
 
   <!-- 거래내역 -->
   <TradeList v-if="isValidation && isSelectedItem" :tradeListData="tradeFilterData" />
@@ -18,7 +21,8 @@
 import Navigation from '../common/Navigation';
 import Condition from '../common/Condition';
 import TradeList from '../common/TradeList';
-import MapList from '../common/MapList';
+import AddressList from '../common/AddressList';
+import DaumMap from '../common/DaumMap';
 
 import { from } from 'rxjs';
 import { tap, bufferCount, filter } from 'rxjs/operators'
@@ -28,7 +32,7 @@ import {_} from 'vue-underscore';
 export default {
   name: 'AptMain',
   components: { 
-    Navigation, Condition, MapList, TradeList
+    Navigation, Condition, AddressList, DaumMap, TradeList
   },
   data () {
     return {
@@ -37,16 +41,18 @@ export default {
       isValidation    : false,  /* 검색조건 validation */
       isSelectedItem  : false,  /* 아파트 선택 여부 */
       showMap         : false,  /* 다음맵 표출 여부*/
-      uniqListData    : [],     /* 아파트명 중복제거 데이터 */
+      addressData     : [],     /* 기간내에 거래된 아파트 목록 */
       tradeListData   : [],     /* 아파트 선택 전, 전체데이터 */
       tradeFilterData : [],     /* 아파트 선택 후, 필터링된 데이터 */
       curDong         : {},     /* 검색조건에서 선택된 동 정보 */
+      mapCenter       : {},     /* 다음맵 초기 경도 정보 */
+      mapMarkerList   : []      /* 다음맵 거래된 아파트 마커 정보 */
 
     }
   },
   methods:{
     callApi(result, dong){
-      this.uniqListData = [];
+      this.addressData = [];
       this.tradeListData = [];
       this.isValidation = result;
       this.showMap = false;
@@ -54,7 +60,7 @@ export default {
     },
     callTradeApi(tradeList, uniqList){
       // 거래된 아파트 정보(group by 아파트명)
-      from(_.sortBy(descUniqList, this.feildData))
+      from(_.sortBy(uniqList, this.feildData))
       .pipe(
         tap(() => {
             // 초기화
@@ -65,8 +71,7 @@ export default {
         bufferCount(3)  // 하나의 row에 3개의 아이템을 뿌려주기 위해
       )
       .subscribe(res => {
-        this.showMap = true;
-        this.uniqListData.push(res);
+        this.addressData.push(res);
       });
       
       // 거래 내역 전체 리스트
@@ -85,6 +90,15 @@ export default {
         this.isSelectedItem = true;
         this.tradeFilterData.push(res);
       })
+    },
+    callKakaoApi(addressList) {
+      if( addressList.length == 0 )
+        return;
+
+      this.showMap = true;
+      let centerObj = addressList[0];
+      this.mapCenter = {lat:centerObj.y, lng:centerObj.x}
+      this.mapMarkerList = addressList;
     }
     
   },

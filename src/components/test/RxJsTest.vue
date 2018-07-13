@@ -24,7 +24,7 @@
 
 <script>
 import { Observable, from } from 'rxjs';
-import { bufferCount, map, flatMap, pluck, first, toArray, filter } from 'rxjs/operators'
+import { bufferCount, map, flatMap, pluck, first, toArray, filter, tap } from 'rxjs/operators'
 import { fromPromise } from 'rxjs/observable/fromPromise'
 import { merge } from 'rxjs/observable/merge'
 
@@ -50,21 +50,25 @@ export default {
         }
     },
     mounted() {
+        // 주소로 좌표정보 가져오기 테스트
+        apiService.getApiDataLocation('/api/getAddress?query=서울특별시 중랑구 망우동 506-8','EG Seoul Leader')
+        .subscribe(res => console.log(res)); 
+
         // 다중 Observable 연결 테스트
-        const s1$ = apiService.getApiDataXml('/api/getRTMSDataSvcAptTrade?LAWD_CD=11110&DEAL_YMD=201511');
-        const s2$ = apiService.getApiDataXml('/api/getRTMSDataSvcAptTrade?LAWD_CD=11110&DEAL_YMD=201512');
+        // const s1$ = apiService.getApiDataXml('/api/getRTMSDataSvcAptTrade?LAWD_CD=11110&DEAL_YMD=201511');
+        // const s2$ = apiService.getApiDataXml('/api/getRTMSDataSvcAptTrade?LAWD_CD=11110&DEAL_YMD=201512');
         // console.log(s1$);
         // console.log(s2$);
         // s1$.subscribe(res => console.log(res));
         // s2$.subscribe(res => console.log(res));
 
-        const s3$ = merge(s1$, s2$);
-        s3$
-        .pipe(
-            flatMap(x => x),
-            toArray()
-        )
-        .subscribe(res => console.log(res));
+        // const s3$ = merge(s1$, s2$);
+        // s3$
+        // .pipe(
+        //     flatMap(x => x),
+        //     toArray()
+        // )
+        // .subscribe(res => console.log(res));
 
         
 
@@ -137,16 +141,16 @@ export default {
         
     },
     methods : {
-        sum (a, b) {
-            const result = a + b;
-            return result
-        },
-        pluckByKeyArray(x, param) {
-            _.each(x, (v) => 
-                _.each(param, (p) => v[p] = _.first(v[p]) )
-            )
-           return x;
-        },
+        // sum (a, b) {
+        //     const result = a + b;
+        //     return result
+        // },
+        // pluckByKeyArray(x, param) {
+        //     _.each(x, (v) => 
+        //         _.each(param, (p) => v[p] = _.first(v[p]) )
+        //     )
+        //    return x;
+        // },
             // getAptListApiData() {
     //     // 법정동 아파트 리스트 API call
     //     this.aptList = [];

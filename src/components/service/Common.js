@@ -69,6 +69,10 @@ export default {
     },
     filterDong(v, txt) {
         return _.filter(v, (obj) => obj['법정동'] === txt )
+    },
+    setObjectTitleByFieldNm(obj, fieldNm) {
+        obj[0].title = fieldNm;
+        return obj;
     }
     
 }
