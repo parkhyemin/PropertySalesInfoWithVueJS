@@ -117,7 +117,7 @@ export default {
         const { LAWD_CD, DEAL_YMD} = this.getSelectedCondition();
         apiService.getMergeData('/api/getRTMSDataSvcAptTrade', LAWD_CD, DEAL_YMD, this.s_dong.txt)
         .pipe(
-            map(x=> common.filterDong(x, this.s_dong.txt)),
+            map(x=> common.filterByFielNm(x, '법정동', this.s_dong.txt)),
             tap(val => this.uniqList = common.uniqTradeList(val, this.feildData)),
             tap(() => this.callKakaoAddressApi('아파트'))
         )
@@ -132,7 +132,7 @@ export default {
         const { LAWD_CD, DEAL_YMD} = this.getSelectedCondition();
         apiService.getMergeData('/api/getRTMSDataSvcRHTrade', LAWD_CD, DEAL_YMD, this.s_dong.txt) 
         .pipe(
-            map(x=> common.filterDong(x, this.s_dong.txt)),
+            map(x=> common.filterByFielNm(x, '법정동', this.s_dong.txt)),
             tap(val => this.uniqList = common.uniqTradeList(val, this.feildData)),
             tap(() => this.callKakaoAddressApi('연립다세대'))
         )
@@ -147,7 +147,7 @@ export default {
         const { LAWD_CD, DEAL_YMD} = this.getSelectedCondition();
         apiService.getMergeData('/api/getRTMSDataSvcSHTrade', LAWD_CD, DEAL_YMD, this.s_dong.txt) 
         .pipe(
-            map(x=> common.filterDong(x, this.s_dong.txt)),
+            map(x=> common.filterByFielNm(x, '법정동', this.s_dong.txt)),
             tap(val => this.uniqList = common.uniqTradeList(val, this.feildData)),            
         )
         .subscribe(res => {

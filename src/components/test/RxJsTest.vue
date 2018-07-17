@@ -27,6 +27,7 @@ import { Observable, from } from 'rxjs';
 import { bufferCount, map, flatMap, pluck, first, toArray, filter, tap } from 'rxjs/operators'
 import { fromPromise } from 'rxjs/observable/fromPromise'
 import { merge } from 'rxjs/observable/merge'
+import { range } from 'rxjs/observable/range'
 
 import {_} from 'vue-underscore';
 import {RxHttpRequest} from 'rx-http-request';
@@ -50,9 +51,12 @@ export default {
         }
     },
     mounted() {
+        range(1, 10)
+        .subscribe(x => console.log(x))
+
         // 주소로 좌표정보 가져오기 테스트
-        apiService.getApiDataLocation('/api/getAddress?query=서울특별시 중랑구 망우동 506-8','EG Seoul Leader')
-        .subscribe(res => console.log(res)); 
+        // apiService.getApiDataLocation('/api/getAddress?query=서울특별시 중랑구 망우동 506-8','EG Seoul Leader')
+        // .subscribe(res => console.log(res)); 
 
         // 다중 Observable 연결 테스트
         // const s1$ = apiService.getApiDataXml('/api/getRTMSDataSvcAptTrade?LAWD_CD=11110&DEAL_YMD=201511');

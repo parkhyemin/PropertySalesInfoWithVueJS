@@ -1,36 +1,46 @@
 import {_} from 'vue-underscore';
-import { from } from 'rxjs';
+import { range } from 'rxjs/observable/range'
 import { map, tap } from 'rxjs/operators'
 
 export default {
+    /**
+     * 년도, 월 검색조건을 초기화 한다
+     * @param {*} arr_year 
+     * @param {*} arr_month 
+     */
     initConditionDate(arr_year, arr_month) {
         // set Year
         const year = new Date().getFullYear();
-        from(this.generateArrayByCount(10))
+        range(0, 10)
         .pipe(map(x => this.generateOptionObj(year-x, year-x)))
         .subscribe(res => arr_year.push(res));
         const c_year = {val : year, txt: year};
     
         // set month
-        arr_month.push(this.generateOptionObj('', '전체'));
-        from(this.generateArrayByCount(12))
-        .pipe(map(x => this.generateOptionObj(x+1, x+1)))
+        range(0, 12)
+        .pipe(
+            tap(arr_month.push(this.generateOptionObj('', '전체'))),
+            map(x => this.generateOptionObj(x+1, x+1))
+        )
         .subscribe(res => arr_month.push(res));
-        const mon = new Date().getMonth() + 1;
-        // const c_month = {val : mon, txt: mon};
         const c_month = {val : '', txt: '전체'};
 
         return {year : c_year, month : c_month}
     },
-    generateArrayByCount(count) {
-        let array = [];
-        for(let i=0; i<count; i++)
-            array.push(i);
-        return array;
-    },
+    /**
+     * 검색조건 selectBox의 Object를 생성한다
+     * @param {*} val 
+     * @param {*} text 
+     */
     generateOptionObj(val, text) {
         return {value:{val : val, txt: text}, text:text};
     },
+    /**
+     * 검색조건 필수 값 체크
+     * @param {*} sido 
+     * @param {*} sigungu 
+     * @param {*} dong 
+     */
     vailidation(sido, sigungu, dong) {
         let msg;
         let hasError = false;
@@ -46,7 +56,11 @@ export default {
         }
         return {msg : msg, hasError : hasError};
     },
-    checkArray (val) {
+    /**
+     * 객체가 배열인지 확인 후, 배열이 아닌 경우 배열로 만든다
+     * @param {*} val 
+     */
+    toArray (val) {
         return (_.isArray(val)) ? val : [val];
     },
     addZero(val){
@@ -67,12 +81,12 @@ export default {
     uniqTradeList(v, feildName) {
         return _.map(_.groupBy(v, (obj) => obj[feildName]), _.first);
     },
-    filterDong(v, txt) {
-        return _.filter(v, (obj) => obj['법정동'] === txt )
+    filterByFielNm(v, fieldNm, txt) {
+        return _.filter(v, (obj) => obj[fieldNm] === txt )
     },
     setObjectTitleByFieldNm(obj, fieldNm) {
         obj[0].title = fieldNm;
         return obj;
-    }
+    },
     
 }

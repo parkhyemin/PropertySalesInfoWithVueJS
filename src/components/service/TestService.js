@@ -28,7 +28,7 @@ export default {
         .pipe(filter(x => x['totalCount'] > 0 ))
         .pipe(pluck('items'))
         .pipe(pluck('item'))
-        .pipe(map(x=> common.checkArray(x)))
+        .pipe(map(x=> common.toArray(x)))
         .pipe(map(x => common.deleteField(x, ['년','지번','지역코드'])))
         .pipe(flatMap(x=> x));
     }

@@ -58,7 +58,7 @@ export default {
       this.isSelectedItem = false;
     },
     callTradeApi(tradeList, uniqList){
-      // 거래된 아파트 정보(group by 아파트명)
+      // 거래된 연립다세대 정보(group by 연립다세대)
       from(_.sortBy(uniqList, this.feildData))
       .pipe(
         tap(() => {

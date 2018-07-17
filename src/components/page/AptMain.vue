@@ -10,7 +10,7 @@
   <AddressList v-if="isValidation" :addressData="addressData" :feildData="feildData" @showFilterData="showFilterData" />
 
   <!-- 다음 맵 -->
-  <DaumMap v-if="showMap" :mapCenter="mapCenter" :mapMarkerList="mapMarkerList" />
+  <DaumMap v-if="showMap" :mapCenter="mapCenter" :mapMarkerList="mapMarkerList" :feildData="feildData" @showFilterData="showFilterData"/>
 
   <!-- 거래내역 -->
   <TradeList v-if="isValidation && isSelectedItem" :tradeListData="tradeFilterData" />

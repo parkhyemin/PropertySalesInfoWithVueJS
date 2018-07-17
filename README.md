@@ -24,6 +24,7 @@
 # 작업진행 예정
 
 - 다음지도 늦게 뜨는 것 개선
+ > x, y좌표 얻는 방식을 다중 Rest API 호출 방식이 아닌, 다른 방식으로 해야 할 듯
 
 - 전체적 소스 점검
   > Common.js initConditionDate 함수 RxJS의 Range 함수로 변경
@@ -125,10 +126,12 @@ npm install xml2json-light
     Vue.use(VueRx)
 
   추가 모듈 설치
-  npm install --save rxjs-compat
+
+      // npm install --save rxjs-compat
 
 # vue-daum-map 설치
 참고 : https://www.npmjs.com/package/vue-daum-map
+
     // npm i vue-daum-map
 
 
