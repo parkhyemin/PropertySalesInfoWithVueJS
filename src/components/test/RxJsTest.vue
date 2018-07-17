@@ -18,7 +18,30 @@
         </b-tab>
     </b-tabs>-->
     <!--<DaumMap />-->
-    
+    <b-container>
+        <b-row v-for="(obj, index) in list" :key="'obj_'+index">
+            <b-col v-if="obj['제목'] != undefined">
+                <b-row class="bg-antiquewhite mt-3">
+                    <b-col>{{obj['제목']}}</b-col>
+                </b-row>
+                <b-row class="bg-darkgray">
+                    <b-col>거래금액</b-col>
+                    <b-col>아파트</b-col>
+                    <b-col>층</b-col>
+                </b-row>
+            </b-col>
+            <b-col v-else>
+                <b-row>
+                    <b-col>{{obj['거래금액']}}</b-col>
+                    <b-col>{{obj['아파트']}}</b-col>
+                    <b-col>{{obj['층']}}</b-col>
+                </b-row>
+            </b-col>
+            
+        </b-row>
+    </b-container>
+
+   
 
 </template>
 
@@ -31,9 +54,10 @@ import { range } from 'rxjs/observable/range'
 
 import {_} from 'vue-underscore';
 import {RxHttpRequest} from 'rx-http-request';
-import xml2json from 'xml2json-light';
+import xml from 'xml2json-light';
 import DaumMap from '../common/DaumMap';
 
+import axios from 'axios'
 import apiService from '../service/ApiService.js'
 import TestService from '../service/TestService.js'
 
@@ -46,13 +70,69 @@ export default {
     data () {
         return {
             msg: [],
-            data : [],
-            tab: 'Detach'
+            data : {
+                '57.3' : [
+                    {'거래금액' : '3억', '아파트' : '덩부아파트', '층' : 1, '전용면적' : '57.3'},
+                    {'거래금액' : '3억2천', '아파트' : '덩부아파트', '층' : 2, '전용면적' : '57.3'}
+                ]
+                ,
+                '74.25' : [
+                    {'거래금액' : '4억', '아파트' : '덩부아파트', '층' : 10, '전용면적' : '74.25'},
+                    {'거래금액' : '4억2천', '아파트' : '덩부아파트', '층' : 11, '전용면적' : '74.25'}
+                ]
+                ,
+                '84.96' : [
+                    {'거래금액' : '5억', '아파트' : '덩부아파트', '층' : 20, '전용면적' : '84.96'},
+                    {'거래금액' : '5억2천', '아파트' : '덩부아파트', '층' : 21, '전용면적' : '84.96'}
+                ]
+                
+            },
+            list : [],
+            tab: 'Detach',
         }
     },
     mounted() {
-        range(1, 10)
-        .subscribe(x => console.log(x))
+        // 전용면적에 따라 group by 된 값
+        let _list = [];
+        from([this.data])
+        .pipe(
+            map(x => _.toArray(x)),
+            flatMap(x=> x),
+            tap(x => {
+                let first = _.first(x);
+                let titleObj = {'제목': first['아파트'] + ' ' + first['전용면적']}
+                _list.push(titleObj)
+                _.each(x, o => _list.push(o));
+            })
+        )
+        .subscribe(x => {
+           this.list = _list;
+            console.log(_list);
+        })
+
+        //다중 request
+        // const apiXmlData = axios.get(url, option)
+        //                 .then((result) => xml.xml2json(result.data));
+        // let promises = [];
+        // let result = [];
+        // promises.push(axios.get('/api/getRTMSDataSvcRHTrade?LAWD_CD=11110&DEAL_YMD=201512'));
+        // promises.push(axios.get('/api/getRTMSDataSvcRHTrade?LAWD_CD=11110&DEAL_YMD=201612'));
+        // promises.push(axios.get('/api/getRTMSDataSvcRHTrade?LAWD_CD=11110&DEAL_YMD=201712'));
+
+
+        // const all = axios.all(promises)
+        // fromPromise(all)
+        // .subscribe(x => console.log(x))
+        // apiService.getMergeData('/api/getRTMSDataSvcRHTrade', '11110', '2018', '논현동')
+        // .subscribe(x => console.log(x))
+
+
+        
+
+        // .then(res => console.log(res));
+        
+        // range(1, 10)
+        // .subscribe(x => console.log(x))
 
         // 주소로 좌표정보 가져오기 테스트
         // apiService.getApiDataLocation('/api/getAddress?query=서울특별시 중랑구 망우동 506-8','EG Seoul Leader')
@@ -145,6 +225,7 @@ export default {
         
     },
     methods : {
+        
         // sum (a, b) {
         //     const result = a + b;
         //     return result
@@ -179,3 +260,11 @@ export default {
 
 }
 </script>
+
+<style scoped>
+    table{width : 100%; border: 1px solid #444444; border-collapse:collapse;}
+    td{border:1px solid black;cursor:pointer}
+    td:hover{background-color: #ccc;}
+    .bg-antiquewhite{background:antiquewhite;}
+    .bg-darkgray{background : darkgray}
+</style>

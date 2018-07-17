@@ -19,7 +19,7 @@ export default {
      * @param {*} dong 
      */
     getApiDataXml(url, lawdCd, dealYmd, dong) {
-        // 법정동 아파트 거래 리스트 API call
+        // 법정동 별 거래 리스트 API call
         let option = {
             params: {
                 LAWD_CD: lawdCd,
@@ -36,7 +36,7 @@ export default {
                     map(x=> common.toArray(x)),  //flatMap 하기전에 배열로 만들어주어야 함
                     // map(x => common.deleteField(x, ['년','지역코드'])),
                     flatMap(x => x),
-                    filter(x => x['법정동'] === dong),
+                    // filter(x => x['법정동'] === dong),
                     toArray()
                 );
     },
@@ -128,6 +128,5 @@ export default {
                     toArray(),
                 );
 
-    },
-    
+    }
 }

@@ -13,7 +13,7 @@
   <DaumMap v-if="showMap" :mapCenter="mapCenter" :mapMarkerList="mapMarkerList" :feildData="feildData" @showFilterData="showFilterData"/>
 
   <!-- 거래내역 -->
-  <TradeList v-if="isValidation && isSelectedItem" :tradeListData="tradeFilterData" />
+  <TradeList v-if="isValidation && isSelectedItem" :tradeListData="tradeFilterData" :tradeFields="tradeFields"/>
 </div>
 </template>
 
@@ -44,6 +44,9 @@ export default {
       addressData     : [],     /* 기간내에 거래된 아파트 목록 */
       tradeListData   : [],     /* 아파트 선택 전, 전체데이터 */
       tradeFilterData : [],     /* 아파트 선택 후, 필터링된 데이터 */
+      tradeFields      : [       /* 거래 내역에 표시될 필드정보 */
+        '월', {key : '일', label : '계약기간'}, '거래금액', '아파트', '전용면적', '층'
+      ],     
       curDong         : {},     /* 검색조건에서 선택된 동 정보 */
       mapCenter       : {},     /* 다음맵 초기 경도 정보 */
       mapMarkerList   : []      /* 다음맵 거래된 아파트 마커 정보 */
@@ -64,7 +67,6 @@ export default {
         tap(() => {
             // 초기화
             this.uniqList = [];
-            this.isSelectedItem = false;
           }
         ),
         bufferCount(3)  // 하나의 row에 3개의 아이템을 뿌려주기 위해

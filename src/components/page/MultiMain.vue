@@ -64,7 +64,6 @@ export default {
         tap(() => {
             // 초기화
             this.uniqList = [];
-            this.isSelectedItem = false;
           }
         ),
         bufferCount(3)  // 하나의 row에 3개의 아이템을 뿌려주기 위해

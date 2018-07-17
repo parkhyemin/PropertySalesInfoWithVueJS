@@ -1,11 +1,12 @@
 <template>
     <VueDaumMap
-      :appKey="appKey"
-      :center.sync="center"
-      :level.sync="level"
-      :mapTypeId="mapTypeId"
-      @load="onLoad"
-      style="width:500px;height:400px;">
+        :appKey="appKey"
+        :center.sync="center"
+        :level.sync="level"
+        :mapTypeId="mapTypeId"
+        @load="onLoad"
+        calss="myMap"
+        style="width:500px;height:400px;margin:auto">
     </VueDaumMap>
 </template>
 

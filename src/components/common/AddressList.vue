@@ -1,12 +1,11 @@
 <template>
   <div>
     <!-- 법정동의 아파트 or 연립/다세대 정보 -->
-    <b-container fluid>
-      <b-row v-for="(arr, index) in addressData" :key="'arr_'+index" class="mb-3">
-        <b-col v-for="(item, index) in arr" :key="'item_'+index" @click="clickItem(item)" >{{item[feildData]}}</b-col>
-      </b-row>
-    </b-container>
-
+    <table>
+        <tr  v-for="(arr, index) in addressData" :key="'arr_'+index">
+            <td v-for="(item, index) in arr" :key="'item_'+index" @click="clickItem(item)">{{item[feildData]}}</td>
+        </tr>
+    </table>
   </div>
 </template>
 
@@ -30,11 +29,13 @@ export default {
   mounted() {
 
   },
- 
 
 }
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+    table{width : 100%; border: 1px solid #444444; border-collapse:collapse; margin-bottom:20px;}
+    td{border:1px solid black;cursor:pointer; width:33%;}
+    td:hover{background-color: #ccc;}
 </style>
