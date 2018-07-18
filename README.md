@@ -1,6 +1,6 @@
 목적 : 프론트 엔드프레임워크 Vue 습득(vue-cli를 통한 환경 Webpack),
        SpringBoot2 습득 (스프링프레임워크5 기반) 
-       자바8 stream 등 기술 습득
+       자바8 stream 등 기술 습득!!
        
 
 1. 무엇을 만들것인가?
