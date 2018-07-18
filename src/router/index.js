@@ -4,6 +4,7 @@ import Main from '@/components/page/Main'
 import AptMain from '@/components/page/AptMain'
 import MultiMain from '@/components/page/MultiMain'
 import DetachMain from '@/components/page/DetachMain'
+import OfficetelMain from '@/components/page/OfficetelMain'
 import RxJsTest from '@/components/test/RxJsTest'
 
 Vue.use(Router)
@@ -29,6 +30,10 @@ export default new Router({
       path: '/Detach',
       name: 'DetachMain',
       component: DetachMain
+    },{
+      path: '/Officetel',
+      name: 'OfficetelMain',
+      component: OfficetelMain
     },
     {
       path: '/test',

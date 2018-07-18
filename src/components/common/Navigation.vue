@@ -3,6 +3,7 @@
     <b-nav-item href="#/Apt"    v-bind:active="svcData === 'Apt'">아파트</b-nav-item>
     <b-nav-item href="#/Multi"  v-bind:active="svcData === 'Multi'">다세대/연립</b-nav-item>
     <b-nav-item href="#/Detach" v-bind:active="svcData === 'Detach'">단독/다가구</b-nav-item>
+    <b-nav-item href="#/Officetel" v-bind:active="svcData === 'Officetel'">오피스텔</b-nav-item>
   </b-nav>
 </template>
 

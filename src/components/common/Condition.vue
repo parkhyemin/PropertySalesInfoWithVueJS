@@ -109,6 +109,8 @@ export default {
                 this.getTradeMultiListApiData();
             }else if(this.svcData === 'Detach'){
                 this.getTradeDetachListApiData();
+            }else if(this.svcData === 'Officetel'){
+                this.getTradeOfficetelListApiData();
             }
         }
     },
@@ -152,6 +154,20 @@ export default {
         )
         .subscribe(res => {
             this.tradeList = res;
+            this.$emit('callTradeApi', this.tradeList, this.uniqList);
+        });
+    },
+    getTradeOfficetelListApiData() {
+        // 법정동 오피스텔 거래 리스트 API call
+        const { LAWD_CD, DEAL_YMD} = this.getSelectedCondition();
+        apiService.getMergeData('/api/getRTMSDataSvcOffiTrade', LAWD_CD, DEAL_YMD, this.s_dong.txt)
+        .pipe(
+            map(x=> common.filterByFielNm(x, '법정동', this.s_dong.txt)),
+            tap(val => this.uniqList = common.uniqTradeList(val, this.feildData)),
+            tap(() => this.callKakaoAddressApi('단지'))
+        )
+        .subscribe(res => {
+            this.tradeList= res;
             this.$emit('callTradeApi', this.tradeList, this.uniqList);
         });
     },

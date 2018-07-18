@@ -20,8 +20,14 @@
             <p class="card-text">단독/다가구 실거래 조회</p>
             <b-btn href="#/Detach" variant="outline-success">이동</b-btn>
         </b-card>
+        <b-card 
+                header="오피스텔"
+                class="text-center">
+            <p class="card-text">오피스텔 실거래 조회</p>
+            <b-btn href="#/Officetel" variant="outline-success">이동</b-btn>
+        </b-card>
     </b-card-group>
-    <b-card-group deck
+    <!--<b-card-group deck
                   class="mb-3">
         <b-card bg-variant="info"
                 text-variant="white"
@@ -29,18 +35,12 @@
                 class="text-center">
             <p class="card-text">토지 실거래 조회(작업예정)</p>
         </b-card>
-        <b-card bg-variant="warning"
-                text-variant="white"
-                header="오피스텔"
-                class="text-center">
-            <p class="card-text">오피스텔 실거래 조회(작업예정)</p>
-        </b-card>
         <b-card bg-variant="danger"
                 text-variant="white"
                 header="분양권"
                 class="text-center">
             <p class="card-text">분양권 실거래 조회(작업예정)</p>
-        </b-card>
+        </b-card>-->
     </b-card-group>
   </div>
 </template>

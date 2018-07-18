@@ -36,7 +36,7 @@ export default {
                     map(x=> common.toArray(x)),  //flatMap 하기전에 배열로 만들어주어야 함
                     // map(x => common.deleteField(x, ['년','지역코드'])),
                     flatMap(x => x),
-                    // filter(x => x['법정동'] === dong),
+                    filter(x => x['법정동'] === dong),
                     toArray()
                 );
     },
