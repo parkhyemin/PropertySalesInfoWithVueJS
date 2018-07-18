@@ -6,20 +6,20 @@
   <!--검색영역-->
   <Condition :svcData="svcData" @callApi="callApi" @callTradeApi="callTradeApi" />
 
-  <!-- 단독/다가구 거래내역 리스트 -->
-  <TradeList v-if="isValidation" :tradeListData="tradeListData" />
+  <!-- 단독/다가구 거래내역 리스트 (group by 월) -->
+  <TradeListWithMonth v-if="isValidation" :tradeListData="tradeListData" />
 </div>
 </template>
 
 <script>
 import Navigation from '../common/Navigation';
 import Condition from '../common/Condition';
-import TradeList from '../common/TradeList';
+import TradeListWithMonth from '../common/TradeListWithMonth';
 
 export default {
   name: 'DetachMain',
   components: { 
-    Navigation, Condition, TradeList
+    Navigation, Condition, TradeListWithMonth
   },
   data () {
     return {

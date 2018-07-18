@@ -12,15 +12,15 @@
   <!-- 다음 맵 -->
   <DaumMap v-if="showMap" :mapCenter="mapCenter" :mapMarkerList="mapMarkerList" :feildData="feildData" @showFilterData="showFilterData"/>
 
-  <!-- 거래내역 -->
-  <TradeList v-if="isValidation && isSelectedItem" :tradeListData="tradeFilterData" :feildData="feildData"/>
+  <!-- 거래내역 (group by 전용면적) -->
+  <TradeListWithArea v-if="isValidation && isSelectedItem" :tradeListData="tradeFilterData" :feildData="feildData"/>
 </div>
 </template>
 
 <script>
 import Navigation from '../common/Navigation';
 import Condition from '../common/Condition';
-import TradeList from '../common/TradeList';
+import TradeListWithArea from '../common/TradeListWithArea';
 import AddressList from '../common/AddressList';
 import DaumMap from '../common/DaumMap';
 
@@ -32,7 +32,7 @@ import {_} from 'vue-underscore';
 export default {
   name: 'AptMain',
   components: { 
-    Navigation, Condition, AddressList, DaumMap, TradeList
+    Navigation, Condition, AddressList, DaumMap, TradeListWithArea
   },
   data () {
     return {

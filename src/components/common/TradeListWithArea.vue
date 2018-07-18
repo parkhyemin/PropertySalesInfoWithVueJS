@@ -1,31 +1,30 @@
 <template>
-    <div ref="el_list">
-        <!--<b-table striped hover :items="tradeListData" :fields="tradeFields"></b-table>-->
-        <b-container>
-        <b-row v-for="(obj, index) in list" :key="'obj_'+index">
-            <b-col v-if="obj['title'] != undefined">
-                <b-row class="bg-green font-bold mt-3">
-                    <b-col>{{obj['title']}}</b-col>
-                </b-row>
-                <b-row class="bg-darkgray font-bold">
-                    <b-col>월</b-col>
-                    <b-col>계약기간</b-col>
-                    <b-col>거래금액</b-col>
-                    <b-col>층</b-col>
-                </b-row>
-            </b-col>
-            <b-col v-else>
-                <b-row class="bt-outset">
-                    <b-col>{{obj['월']}}</b-col>
-                    <b-col>{{obj['일']}}</b-col>
-                    <b-col>{{obj['거래금액']}}</b-col>
-                    <b-col>{{obj['층']}}</b-col>
-                </b-row>
-            </b-col>
-            
-        </b-row>
+  <div ref="el_list">
+    <!--<b-table striped hover :items="tradeListData" :fields="tradeFields"></b-table>-->
+    <b-container>
+      <b-row v-for="(obj, index) in list" :key="'obj_'+index">
+        <b-col v-if="obj['title'] != undefined">
+          <b-row class="bg-green font-bold mt-3">
+            <b-col>{{obj['title']}}</b-col>
+          </b-row>
+          <b-row class="bg-darkgray font-bold">
+            <b-col>월</b-col>
+            <b-col>계약기간</b-col>
+            <b-col>거래금액</b-col>
+            <b-col>층</b-col>
+          </b-row>
+        </b-col>
+        <b-col v-else>
+          <b-row class="bt-outset">
+            <b-col>{{obj['월']}}</b-col>
+            <b-col>{{obj['일']}}</b-col>
+            <b-col>{{obj['거래금액']}}</b-col>
+            <b-col>{{obj['층']}}</b-col>
+          </b-row>
+        </b-col>
+      </b-row>
     </b-container>
-    </div>    
+  </div>    
 </template>
 
 <script>
@@ -35,7 +34,7 @@ import { map, flatMap, tap } from 'rxjs/operators'
 import {_} from 'vue-underscore';
 
 export default {
-  name: 'TradeList',
+  name: 'TradeListWithArea',
   props: ['tradeListData', 'feildData'],
   components: { 
         
@@ -79,7 +78,8 @@ export default {
             _.each(x, o => groupByList.push(o));
           })
         )
-      .subscribe(x =>  this.list = _.sortBy(groupByList, o => parseInt(o['전용면적']))) // ApiService.js의 getMergeData함수에서 '월'로 정렬 후, '전용면적'으로 추가적인 정렬 작업
+      // ApiService.js의 getMergeData함수에서 '월'로 정렬 후, '전용면적'으로 추가적인 정렬 작업
+      .subscribe(x => this.list = _.sortBy(groupByList, o => parseInt(o['전용면적']))) 
     },
   }
   

@@ -18,7 +18,8 @@
         </b-tab>
     </b-tabs>-->
     <!--<DaumMap />-->
-    <b-container>
+
+    <!--<b-container>
         <b-row v-for="(obj, index) in list" :key="'obj_'+index">
             <b-col v-if="obj['제목'] != undefined">
                 <b-row class="bg-antiquewhite mt-3">
@@ -39,9 +40,40 @@
             </b-col>
             
         </b-row>
-    </b-container>
+    </b-container>-->
 
-   
+    <b-container>
+        <b-row v-for="(obj, index) in list" :key="'obj_'+index">
+            <b-col v-if="obj['title'] != undefined">
+                <b-row class="bg-antiquewhite mt-3">
+                    <b-col>{{obj['title']}}</b-col>
+                </b-row>
+                <b-row class="bg-darkgray">
+                    <b-col>거래금액</b-col>
+                    <b-col>연면적</b-col>
+                    <b-col>건축년도</b-col>
+                </b-row>
+                <b-row class="bg-darkgray">
+                    <b-col>계약일</b-col>
+                    <b-col>대지면적</b-col>
+                    <b-col>주택유형</b-col>
+                </b-row>
+            </b-col>
+            <b-col v-else>
+                <b-row>
+                    <b-col>{{obj['거래금액']}}</b-col>
+                    <b-col>{{obj['연면적']}}</b-col>
+                    <b-col>{{obj['건축년도']}}</b-col>
+                </b-row>
+                <b-row>
+                    <b-col>{{obj['일']}}</b-col>
+                    <b-col>{{obj['대지면적']}}</b-col>
+                    <b-col>{{obj['주택유형']}}</b-col>
+                </b-row>
+            </b-col>
+            
+        </b-row>
+    </b-container>
 
 </template>
 
@@ -70,45 +102,73 @@ export default {
     data () {
         return {
             msg: [],
-            data : {
-                '57.3' : [
-                    {'거래금액' : '3억', '아파트' : '덩부아파트', '층' : 1, '전용면적' : '57.3'},
-                    {'거래금액' : '3억2천', '아파트' : '덩부아파트', '층' : 2, '전용면적' : '57.3'}
-                ]
-                ,
-                '74.25' : [
-                    {'거래금액' : '4억', '아파트' : '덩부아파트', '층' : 10, '전용면적' : '74.25'},
-                    {'거래금액' : '4억2천', '아파트' : '덩부아파트', '층' : 11, '전용면적' : '74.25'}
-                ]
-                ,
-                '84.96' : [
-                    {'거래금액' : '5억', '아파트' : '덩부아파트', '층' : 20, '전용면적' : '84.96'},
-                    {'거래금액' : '5억2천', '아파트' : '덩부아파트', '층' : 21, '전용면적' : '84.96'}
-                ]
+            // data : {
+            //     '57.3' : [
+            //         {'거래금액' : '3억', '아파트' : '덩부아파트', '층' : 1, '전용면적' : '57.3'},
+            //         {'거래금액' : '3억2천', '아파트' : '덩부아파트', '층' : 2, '전용면적' : '57.3'}
+            //     ]
+            //     ,
+            //     '74.25' : [
+            //         {'거래금액' : '4억', '아파트' : '덩부아파트', '층' : 10, '전용면적' : '74.25'},
+            //         {'거래금액' : '4억2천', '아파트' : '덩부아파트', '층' : 11, '전용면적' : '74.25'}
+            //     ]
+            //     ,
+            //     '84.96' : [
+            //         {'거래금액' : '5억', '아파트' : '덩부아파트', '층' : 20, '전용면적' : '84.96'},
+            //         {'거래금액' : '5억2천', '아파트' : '덩부아파트', '층' : 21, '전용면적' : '84.96'}
+            //     ]
                 
-            },
+            // },
+            data : [
+                    {'거래금액' : '480,000', '건축년도' : '1999', '년' : '2018', '대지면적' : '375.8', '법정동':'논현동', '연면적':'940.22', '월':'2', '일':'1~10', '주택유형':'단독', '지역코드':'11680'},
+                    {'거래금액' : '380,000', '건축년도' : '1999', '년' : '2018', '대지면적' : '240.8', '법정동':'논현동', '연면적':'549.12', '월':'2', '일':'1~10', '주택유형':'다가구', '지역코드':'11680'},
+                    {'거래금액' : '470,000', '건축년도' : '1985', '년' : '2018', '대지면적' : '375.8', '법정동':'논현동', '연면적':'840.22', '월':'1', '일':'1~10', '주택유형':'단독', '지역코드':'11680'},
+                    {'거래금액' : '360,000', '건축년도' : '1985', '년' : '2018', '대지면적' : '240.8', '법정동':'논현동', '연면적':'249.12', '월':'1', '일':'1~10', '주택유형':'다가구', '지역코드':'11680'},                    
+            ],
             list : [],
             tab: 'Detach',
         }
     },
     mounted() {
-        // 전용면적에 따라 group by 된 값
+        // 월에 따라 group by 된 값
+        const source = _.groupBy(this.data, '월');
         let _list = [];
-        from([this.data])
+        
+        from([source])
         .pipe(
             map(x => _.toArray(x)),
             flatMap(x=> x),
             tap(x => {
                 let first = _.first(x);
-                let titleObj = {'제목': first['아파트'] + ' ' + first['전용면적']}
+                let titleObj = {
+                                    'title': first['년'] + '년 ' + first['월']+ '월',
+                                    '월' : first['월']
+                                }
                 _list.push(titleObj)
                 _.each(x, o => _list.push(o));
             })
         )
         .subscribe(x => {
-           this.list = _list;
-            console.log(_list);
+           this.list = _.sortBy(_list, o =>  parseInt(o['월']) * -1 )
         })
+        
+        // 전용면적에 따라 group by 된 값
+        // let _list = [];
+        // from([this.data])
+        // .pipe(
+        //     map(x => _.toArray(x)),
+        //     flatMap(x=> x),
+        //     tap(x => {
+        //         let first = _.first(x);
+        //         let titleObj = {'제목': first['아파트'] + ' ' + first['전용면적']}
+        //         _list.push(titleObj)
+        //         _.each(x, o => _list.push(o));
+        //     })
+        // )
+        // .subscribe(x => {
+        //    this.list = _list;
+        //     console.log(_list);
+        // })
 
         //다중 request
         // const apiXmlData = axios.get(url, option)
