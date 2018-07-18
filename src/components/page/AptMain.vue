@@ -7,7 +7,7 @@
   <Condition :svcData="svcData" :feildData="feildData" @callApi="callApi" @callTradeApi="callTradeApi" @callKakaoApi="callKakaoApi"/>
 
   <!-- 지역 정보-->
-  <AddressList v-if="isValidation" :addressData="addressData" :feildData="feildData" @showFilterData="showFilterData" />
+  <AddressList v-if="isValidation" :addressData="addressData" :feildData="feildData" :itemNm="itemNm" @showFilterData="showFilterData" />
 
   <!-- 다음 맵 -->
   <DaumMap v-if="showMap" :mapCenter="mapCenter" :mapMarkerList="mapMarkerList" :feildData="feildData" @showFilterData="showFilterData"/>
@@ -40,6 +40,7 @@ export default {
       feildData       : '아파트',/* API 필드명 */
       isValidation    : false,  /* 검색조건 validation */
       isSelectedItem  : false,  /* 아파트 선택 여부 */
+      itemNm          : '',     /* 선택된 아파트 명 */
       showMap         : false,  /* 다음맵 표출 여부*/
       addressData     : [],     /* 기간내에 거래된 아파트 목록 */
       tradeListData   : [],     /* 아파트 선택 전, 전체데이터 */
@@ -85,6 +86,7 @@ export default {
       )
       .subscribe(res => {
         this.isSelectedItem = true;
+        this.itemNm = itemNm;
         this.tradeFilterData.push(res);
       })
     },

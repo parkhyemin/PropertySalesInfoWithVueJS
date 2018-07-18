@@ -26,13 +26,7 @@
 - 다음지도 늦게 뜨는 것 개선
  > x, y좌표 얻는 방식을 다중 Rest API 호출 방식이 아닌, 다른 방식으로 해야 할 듯
 
-- 실거래 리스트 
-  > 단독/다가구 별도 컴포넌트 만들어야 됨
-
-
-- 토지, 오피스텔, 분양권 실거래 조회 작업(보류)
-
-  > 오피스텔 : http://openapi.molit.go.kr/OpenAPI_ToolInstallPackage/service/rest/RTMSOBJSvc/getRTMSDataSvcOffiTrade
+- 토지, 분양권 실거래 조회 작업(보류)
   > 토지 : http://openapi.molit.go.kr/OpenAPI_ToolInstallPackage/service/rest/RTMSOBJSvc/getRTMSDataSvcLandTrade
 
 
@@ -74,6 +68,11 @@
 - css 작업 매매 매물 리스트
 - css 작업 실거래 리스트(아파트, 연립다세대)
 - css 작업 네비게이션, Condition
+- 실거래 리스트 컴포넌트 분리
+  > 전용면적별 : 아파트, 연립다세대
+  > 거래월별 : 단독다가구
+- 오피스텔 실거래 API 작업
+- 다음맵이나, 주소리스트 선택 시 색상변화
 
 
 
