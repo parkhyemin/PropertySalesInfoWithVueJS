@@ -13,7 +13,7 @@
   <DaumMap v-if="showMap" :mapCenter="mapCenter" :mapMarkerList="mapMarkerList" :feildData="feildData" @showFilterData="showFilterData"/>
 
   <!-- 거래내역 -->
-  <TradeList v-if="isValidation && isSelectedItem" :tradeListData="tradeFilterData" :tradeFields="tradeFields"/>
+  <TradeList v-if="isValidation && isSelectedItem" :tradeListData="tradeFilterData" :feildData="feildData"/>
 </div>
 </template>
 
@@ -43,10 +43,7 @@ export default {
       showMap         : false,  /* 다음맵 표출 여부*/
       addressData     : [],     /* 기간내에 거래된 아파트 목록 */
       tradeListData   : [],     /* 아파트 선택 전, 전체데이터 */
-      tradeFilterData : [],     /* 아파트 선택 후, 필터링된 데이터 */
-      tradeFields      : [       /* 거래 내역에 표시될 필드정보 */
-        '월', {key : '일', label : '계약기간'}, '거래금액', '아파트', '전용면적', '층'
-      ],     
+      tradeFilterData : [],     /* 아파트 선택 후, 필터링된 데이터 */    
       curDong         : {},     /* 검색조건에서 선택된 동 정보 */
       mapCenter       : {},     /* 다음맵 초기 경도 정보 */
       mapMarkerList   : []      /* 다음맵 거래된 아파트 마커 정보 */

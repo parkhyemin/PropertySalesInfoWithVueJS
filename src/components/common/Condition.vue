@@ -1,15 +1,15 @@
 <template>
 <div>
-  <b-container fluid>
-    <b-row class="ml-1"><p>실거래가</p></b-row>
+  <b-container fluid class="bg-aliceblue">
+    <!--<b-row class="ml-1"><p>실거래가</p></b-row>-->
     <b-row class="mb-3">
-      <b-col><b-form-select v-model="s_year" :options="o_year" /></b-col>
-      <b-col><b-form-select v-model="s_month" :options="o_month" /></b-col>
-      <b-col><b-form-select v-model="s_sido" :options="o_sido" @change="setConditionSigungu($event)"/></b-col>
+      <b-col class="mt-2"><b-form-select v-model="s_year" :options="o_year" /></b-col>
+      <b-col class="mt-2"><b-form-select v-model="s_month" :options="o_month" /></b-col>
+      <b-col class="mt-2" cols="6"><b-form-select v-model="s_sido" :options="o_sido" @change="setConditionSigungu($event)"/></b-col>
     </b-row>
     <b-row class="mb-3">
-      <b-col><b-form-select v-model="s_sigungu" :options="o_sigungu" @change="setConditionDong($event)"/></b-col>
-      <b-col>
+      <b-col class="mb-3"><b-form-select v-model="s_sigungu" :options="o_sigungu" @change="setConditionDong($event)"/></b-col>
+      <b-col class="mb-3">
         <b-input-group>
             <b-form-select v-model="s_dong" :options="o_dong" ref="el_dong" class="mr-2"/>
             <b-btn variant="primary" @click="callApi" >조회</b-btn>
@@ -176,4 +176,8 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+    select{font-size:13px; height:35px!important;}
+    .col{padding-left:5px;padding-right:5px;}
+    button{height:35px;}
+    .bg-aliceblue{background : aliceblue; }
 </style>

@@ -6,7 +6,7 @@
         :mapTypeId="mapTypeId"
         @load="onLoad"
         calss="myMap"
-        style="width:500px;height:400px;margin:auto">
+        style="width:100%;height:400px;margin:auto">
     </VueDaumMap>
 </template>
 

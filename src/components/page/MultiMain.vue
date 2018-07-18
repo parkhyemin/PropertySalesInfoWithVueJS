@@ -13,7 +13,7 @@
   <DaumMap v-if="showMap" :mapCenter="mapCenter" :mapMarkerList="mapMarkerList" :feildData="feildData" @showFilterData="showFilterData"/>
 
   <!-- 다세대/연립 거래내역 -->
-  <TradeList v-if="isValidation && isSelectedItem" :tradeListData="tradeFilterData" />
+  <TradeList v-if="isValidation && isSelectedItem" :tradeListData="tradeFilterData" :feildData="feildData"/>
 </div>
 </template>
 

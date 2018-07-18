@@ -27,8 +27,7 @@
  > x, y좌표 얻는 방식을 다중 Rest API 호출 방식이 아닌, 다른 방식으로 해야 할 듯
 
 - 실거래 리스트 
-  > css 작업
-  > 전용면적 별로 리스트 보여지도록(작업중 RxJsTest.vue)
+  > 단독/다가구 별도 컴포넌트 만들어야 됨
 
 
 - 토지, 오피스텔, 분양권 실거래 조회 작업(보류)
@@ -73,6 +72,8 @@
 - 다음지도 마커의 Infowindow 클릭 시, 거래목록 클릭한 것 처럼 거래내역 보여주기(fromEvent 사용)
 - 아파트목록 or 연립다세대 or InfoWindow 클릭 시, 포커스 이동
 - css 작업 매매 매물 리스트
+- css 작업 실거래 리스트(아파트, 연립다세대)
+- css 작업 네비게이션, Condition
 
 
 
@@ -151,14 +152,14 @@ ex) 아파트 매매가 공공API
 http://openapi.molit.go.kr:8081/OpenAPI_ToolInstallPackage/service/rest/RTMSOBJSvc/getRTMSDataSvcAptTrade?ServiceKey=AI9qcEoaK35mGSnhjGyfzEBVkfoS14LZFAn7BgBQbI5FwHzxJe1%2BNwPz0GcB%2F0JsMXpFLic28nDyRorftIW8yg%3D%3D&LAWD_CD=11110&DEAL_YMD=201512
 
 - Vue 참고사이트
-https://kr.vuejs.org/v2/guide/
+  https://kr.vuejs.org/v2/guide/
 
 - Vuejs with Bootstrap (Bootstrap4)
- https://bootstrap-vue.js.org
- http://hyper-cube.io/2017/07/16/vuejs-with-bootstrap/
+  https://bootstrap-vue.js.org
+  http://hyper-cube.io/2017/07/16/vuejs-with-bootstrap/
 
 - 법정동코드로 공동주택 단지 목록정보 공공API
- https://www.data.go.kr/dataset/3039714/openapi.do?mypageFlag=Y (공동주택 단지 목록제공 서비스)
+  https://www.data.go.kr/dataset/3039714/openapi.do?mypageFlag=Y (공동주택 단지 목록제공 서비스)
 
  ex)
  도로명
