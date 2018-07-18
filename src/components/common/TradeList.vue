@@ -71,12 +71,15 @@ export default {
           flatMap(x=> x),
           tap(x => {
             let first = _.first(x);
-            let titleObj = {'title': first[this.feildData] + ' ' + first['전용면적'] + '㎡'}
+            let titleObj ={
+                            'title': first[this.feildData] + ' ' + first['전용면적'] + '㎡',
+                            '전용면적':first['전용면적']
+                          }
             groupByList.push(titleObj)
             _.each(x, o => groupByList.push(o));
           })
         )
-      .subscribe(x =>  this.list = groupByList)
+      .subscribe(x =>  this.list = _.sortBy(groupByList, o => parseInt(o['전용면적']))) // ApiService.js의 getMergeData함수에서 '월'로 정렬 후, '전용면적'으로 추가적인 정렬 작업
     },
   }
   
